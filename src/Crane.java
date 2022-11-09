@@ -13,7 +13,6 @@ public class Crane {
     }
 
     public double moveCrane(Point p){
-
         double timex = ((double)(p.x - possition.x))/speedx;
         double timey = ((double) (p.y - possition.y))/speedy;
         return 0.0;
