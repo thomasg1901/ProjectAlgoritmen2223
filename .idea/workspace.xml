@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="add tests">
-      <change afterPath="$PROJECT_DIR$/src/Container.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Movement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Slot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Yard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Crane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Crane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
