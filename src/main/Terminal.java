@@ -1,14 +1,16 @@
+package main;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Yard {
+
+public class Terminal {
     private Map<Container, List<Slot>> containerSlots;
     private List<Crane> cranes;
 
 
-    public Yard(Map<Container, List<Slot>> containerSlots, List<Crane> cranes) {
+    public Terminal(Map<Container, List<Slot>> containerSlots, List<Crane> cranes) {
         this.containerSlots = containerSlots;
         this.cranes = cranes;
     }

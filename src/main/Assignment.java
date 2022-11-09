@@ -2,7 +2,7 @@ package main;
 import java.util.List;
 import java.util.Map;
 
-public class Assignment {
+public class Assignment implements Comparable {
     private Container container;
     private List<Slot> containerSlots;
 
@@ -25,5 +25,10 @@ public class Assignment {
 
     public void setContainerSlots(List<Slot> containerSlots) {
         this.containerSlots = containerSlots;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return ((Assignment)o).getContainer().getLength() - this.getContainer().getLength();
     }
 }
