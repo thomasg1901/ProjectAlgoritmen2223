@@ -2,7 +2,6 @@ package main;
 public class Container {
     private int id;
     private int length;
-
     private Slot[] slots;
 
     public Container(int id, int length) {
@@ -31,20 +30,7 @@ public class Container {
         return slots;
     }
 
-    public void putContainerInSlots(Slot[] slots) throws Exception {
-        if(slots.length != this.length){
-            throw new Exception();
-        }
+    public void setSlots(Slot[] slots) {
         this.slots = slots;
-    }
-
-    public boolean containerIsStackedCorrectly(){
-        boolean allSame = true;
-        int firstHeight = slots[0].getContainerHeight(this);
-        if(firstHeight == -1) return false;
-        for(int i = 1; i < slots.length; i++){
-            allSame = allSame && slots[i].getContainerHeight(this) == firstHeight;
-        }
-        return allSame;
     }
 }

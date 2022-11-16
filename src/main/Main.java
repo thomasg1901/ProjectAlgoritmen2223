@@ -45,6 +45,7 @@ public class Main {
                 Container assignmentContainer = containers.stream().filter(container -> container.getId() == ((Double)assignmentMap.get("container_id")).intValue()).collect(Collectors.toList()).get(0);
                 assignments.add(new Assignment(assignmentContainer, assignmentSlots));
             }
+            Terminal terminal = new Terminal(containers, slots.toArray(new Slot[0]), new ArrayList<>(), 3);
             Collections.sort(assignments);
 
             // close reader

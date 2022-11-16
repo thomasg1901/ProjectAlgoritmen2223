@@ -6,6 +6,14 @@ public class Slot {
     private int id;
     private Point location;
 
+    public Stack<Container> getContainerStack() {
+        return containerStack;
+    }
+
+    public void stackContainer(Container container) {
+        this.containerStack.push(container);
+    }
+
     private Stack<Container> containerStack;
     public Slot(int id, Point location) {
         this.id = id;
@@ -34,10 +42,6 @@ public class Slot {
             return containerStack.search(container);
         }
         return -1;
-    }
-
-    public void putContainerInSlot(Container container){
-        this.containerStack.push(container);
     }
 
     public Container removeContainerFromSlot(){
