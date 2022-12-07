@@ -6,10 +6,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JsonReader {
@@ -19,7 +16,6 @@ public class JsonReader {
             Gson gson = new Gson();
 
             // create a reader
-
             Reader reader = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8);
 
             // convert JSON file to map
@@ -60,6 +56,46 @@ public class JsonReader {
             reader.close();
             return terminal;
 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Target readTargetAssignments(String filePath, List<Terminal> terminals){
+        try {
+            // create Gson instance
+            Gson gson = new Gson();
+
+            // create a reader
+            Reader reader = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8);
+
+            // convert JSON file to map
+            Map<?, ?> map = gson.fromJson(reader, Map.class);
+
+            List<Assignment> assignments = new ArrayList<>();
+
+            Terminal targetTerminal = terminals.stream().filter(terminal -> terminal.getName().equals(map.get("name").toString())).collect(Collectors.toList()).get(0);
+
+            for (Map<String, ?> assignmentMap : (List<Map>)map.get("assignments")) {
+                Container assignmentContainer = targetTerminal.getContainers().stream().filter(container -> container.getId() == ((Double)assignmentMap.get("container_id")).intValue()).collect(Collectors.toList()).get(0);
+                Slot[] assignmentSlots = new Slot[assignmentContainer.getLength()];
+                int leftMostSlotId = ((Double)assignmentMap.get("slot_id")).intValue();
+                Slot leftMostSlot = Arrays.asList(targetTerminal.getSlots()).stream().filter(slot -> slot.getId() == (leftMostSlotId)).collect(Collectors.toList()).get(0);
+                for(int i = 1; i < assignmentContainer.getLength(); i++){
+                    Point nextSlotLocation = new Point(leftMostSlot.getLocation().getX()+i, leftMostSlot.getLocation().getY());
+                    assignmentSlots[i] = Arrays.asList(targetTerminal.getSlots()).stream().filter(slot -> slot.getLocation() == nextSlotLocation).collect(Collectors.toList()).get(0);
+                }
+                assignments.add(new Assignment(assignmentContainer, assignmentSlots));
+            }
+            reader.close();
+            int maxHeight = ((Double)map.get("maxheight")).intValue();
+            int targetHeight = maxHeight;
+            if(map.containsKey("targetheight")){
+                targetHeight = ((Double)map.get("maxheight")).intValue();
+            }
+
+            return new Target(targetTerminal, maxHeight, targetHeight, assignments);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
