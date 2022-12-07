@@ -119,7 +119,7 @@ public class Terminal {
         for(int i = 0; i+1 < slots.length; i++){
             isAdjacent = isAdjacent
                     && (Math.abs(slots[i+1].getLocation().getY() - slots[i].getLocation().getY())
-                    + Math.abs(slots[i+1].getLocation().getX() - slots[1].getLocation().getX())) == 1;
+                    + Math.abs(slots[i+1].getLocation().getX() - slots[i].getLocation().getX())) == 1;
         }
         if(!isAdjacent) return false;
 
@@ -131,7 +131,7 @@ public class Terminal {
         // Check 4: Verify top-down alignment
         boolean isStackedOnSmaller = true;
         for(Slot slot: slots){
-            isStackedOnSmaller = isStackedOnSmaller && slot.getContainerStack().peek().getLength() <= container.getLength();
+            isStackedOnSmaller = isStackedOnSmaller && slot.getContainerStack().size() == 0 || slot.getContainerStack().peek().getLength() <= container.getLength();
         }
 
         return isStackedOnSmaller;
