@@ -41,9 +41,10 @@ public class JsonReader {
                 Slot[] assignmentSlots = new Slot[assignmentContainer.getLength()];
                 int leftMostSlotId = ((Double)assignmentMap.get("slot_id")).intValue();
                 Slot leftMostSlot = slots.stream().filter(slot -> slot.getId() == (leftMostSlotId)).collect(Collectors.toList()).get(0);
+                assignmentSlots[0] = leftMostSlot;
                 for(int i = 1; i < assignmentContainer.getLength(); i++){
                     Point nextSlotLocation = new Point(leftMostSlot.getLocation().getX()+i, leftMostSlot.getLocation().getY());
-                    assignmentSlots[i] = slots.stream().filter(slot -> slot.getLocation() == nextSlotLocation).collect(Collectors.toList()).get(0);
+                    assignmentSlots[i] = slots.stream().filter(slot -> slot.getLocation().equals(nextSlotLocation)).collect(Collectors.toList()).get(0);
                 }
                 assignmentContainer.setSlots(assignmentSlots);
 //                assignments.add(new Assignment(assignmentContainer, assignmentSlots));
