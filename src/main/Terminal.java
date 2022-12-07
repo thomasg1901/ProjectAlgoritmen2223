@@ -6,18 +6,26 @@ import java.util.Map;
 
 
 public class Terminal {
+    private String name;
     private final List<Container> containers;
 
     private final Slot[] slots;
     private List<Crane> cranes;
     private final int maxHeight;
 
+    private final int width;
 
-    public Terminal(List<Container> containers, Slot[] slots, List<Crane> cranes, int maxHeight) {
+    private final int length;
+
+
+    public Terminal(String name, List<Container> containers, Slot[] slots, List<Crane> cranes, int maxHeight, int width, int length) {
+        this.name = name;
         this.containers = containers;
         this.slots = slots;
         this.cranes = cranes;
         this.maxHeight = maxHeight;
+        this.width = width;
+        this.length = length;
     }
 
     public List<Container> getContainers() {
@@ -36,9 +44,21 @@ public class Terminal {
         containers.add(container);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
     public void moveCrane(Crane crane, Point p, double startTime){
-        double timex = ((double)(p.x - crane.getPosition().x))/crane.getSpeedx();
-        double timey = ((double) (p.y - crane.getPosition().y))/crane.getSpeedy();
+        double timex = ((double)(p.getX() - crane.getPosition().getX()))/crane.getSpeedx();
+        double timey = ((double) (p.getY() - crane.getPosition().getY()))/crane.getSpeedy();
 
         // Control movement
         if(controlCollision(p, crane, 0))
@@ -55,11 +75,11 @@ public class Terminal {
     private boolean controlCollision(Point p, Crane c, int delta){
         for (Crane crane: cranes) {
             if (crane.getId() != c.getId()){
-                if(c.getPosition().x < p.x) // Crane moves left
-                    if (c.getPosition().x < crane.getPosition().x + delta) // Check if crane comes to close to the other cranes
+                if(c.getPosition().getX() < p.getX()) // Crane moves left
+                    if (c.getPosition().getX() < crane.getPosition().getX() + delta) // Check if crane comes to close to the other cranes
                         return true;
                     else                        // Crane moves right
-                        if(c.getPosition().x > crane.getPosition().x - delta) // Check if crane comes to close to the other cranes
+                        if(c.getPosition().getX() > crane.getPosition().getX() - delta) // Check if crane comes to close to the other cranes
                             return true;
             }
         }
@@ -98,8 +118,8 @@ public class Terminal {
         boolean isAdjacent = true;
         for(int i = 0; i+1 < slots.length; i++){
             isAdjacent = isAdjacent
-                    && (Math.abs(slots[i+1].getLocation().y - slots[i].getLocation().y)
-                    + Math.abs(slots[i+1].getLocation().x - slots[1].getLocation().x)) == 1;
+                    && (Math.abs(slots[i+1].getLocation().getY() - slots[i].getLocation().getY())
+                    + Math.abs(slots[i+1].getLocation().getX() - slots[1].getLocation().getX())) == 1;
         }
         if(!isAdjacent) return false;
 

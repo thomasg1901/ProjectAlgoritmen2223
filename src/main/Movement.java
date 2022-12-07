@@ -1,29 +1,24 @@
 package main;
 public class Movement {
-    private Slot slotFrom;
-    private Slot slotTo;
+    private Slot[] slotsFrom;
+    private Slot[] slotsTo;
     private Container container;
 
-    public Movement(Slot slotFrom, Slot slotTo, Container container){
-        this.slotFrom = slotFrom;
-        this.slotTo = slotTo;
+    private final Terminal terminal;
+
+    public Movement(Slot[] slotFrom, Slot[] slotTo, Container container, Terminal terminal){
+        this.slotsFrom = slotsFrom;
+        this.slotsTo = slotsTo;
         this.container = container;
+        this.terminal = terminal;
     }
 
-    public Slot getSlotFrom() {
-        return slotFrom;
+    public Slot[] getSlotsFrom() {
+        return slotsFrom;
     }
 
-    public void setSlotFrom(Slot slotFrom) {
-        this.slotFrom = slotFrom;
-    }
-
-    public Slot getSlotTo() {
-        return slotTo;
-    }
-
-    public void setSlotTo(Slot slotTo) {
-        this.slotTo = slotTo;
+    public Slot[] getSlotsTo() {
+        return slotsTo;
     }
 
     public Container getContainer() {
@@ -32,5 +27,19 @@ public class Movement {
 
     public void setContainer(Container container) {
         this.container = container;
+    }
+
+    public boolean movementFeasible(){
+        // Check if container is on top of stack at the start slot
+        if(!this.slotsFrom[0].getContainerStack().peek().equals(container)){
+            return false;
+        }
+
+        // Check if container can be put on top of the destination slot
+        if(!terminal.isStackable(container, slotsTo)){
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1,4 +1,7 @@
 package main;
+
+import java.util.Objects;
+
 public class Container {
     private int id;
     private int length;
@@ -32,5 +35,13 @@ public class Container {
 
     public void setSlots(Slot[] slots) {
         this.slots = slots;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Container container = (Container) o;
+        return id == container.id;
     }
 }

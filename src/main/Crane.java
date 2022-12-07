@@ -9,13 +9,26 @@ public class Crane {
     private Point position;
 
     private HashMap<Double, Point> trajectory;
-    private int speedx;
-    private int speedy;
-    public Crane(Point startPoint, int speedx, int speedy){
+    private double speedx;
+    private double speedy;
+
+    private double xMin;
+
+    private double xMax;
+
+    private double yMin;
+
+    private double yMax;
+
+    public Crane(Point startPoint, double speedx, double speedy, double xMin, double xMax, double yMin, double yMax){
         this.position = startPoint;
         this.speedx = speedx;
         this.speedy = speedy;
         this.trajectory = new HashMap<Double, Point>();
+        this.xMin = xMin;
+        this.xMax = xMax;
+        this.yMin = yMin;
+        this.yMax = yMax;
     }
 
 
@@ -35,19 +48,19 @@ public class Crane {
         this.position = position;
     }
 
-    public int getSpeedx() {
+    public double getSpeedx() {
         return speedx;
     }
 
-    public void setSpeedx(int speedx) {
+    public void setSpeedx(double speedx) {
         this.speedx = speedx;
     }
 
-    public int getSpeedy() {
+    public double getSpeedy() {
         return speedy;
     }
 
-    public void setSpeedy(int speedy) {
+    public void setSpeedy(double speedy) {
         this.speedy = speedy;
     }
 

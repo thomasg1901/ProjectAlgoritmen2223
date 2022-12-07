@@ -1,13 +1,15 @@
 package main;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Assignment implements Comparable {
     private Container container;
-    private List<Slot> containerSlots;
+    private Slot[] containerSlots;
 
-    public Assignment(Container container, List<Slot> containerSlots) {
+    public Assignment(Container container, Slot[] containerSlots) {
         this.container = container;
+        this.container.getLength();
         this.containerSlots = containerSlots;
     }
 
@@ -19,11 +21,11 @@ public class Assignment implements Comparable {
         this.container = container;
     }
 
-    public List<Slot> getContainerSlots() {
+    public Slot[] getContainerSlots() {
         return containerSlots;
     }
 
-    public void setContainerSlots(List<Slot> containerSlots) {
+    public void setContainerSlots(Slot[] containerSlots) {
         this.containerSlots = containerSlots;
     }
 
