@@ -37,6 +37,10 @@ public class Slot {
         this.location = location;
     }
 
+    public int getSlotHeight(){
+        return containerStack.size();
+    }
+
     public int getContainerHeight(Container container){
         if(containerStack.contains(container)){
             return containerStack.search(container);

@@ -16,7 +16,10 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        Terminal terminal = JsonReader.readTerminal("src/main/resources/terminal22_1_100_1_10.json");
+        Terminal terminal = JsonReader.readTerminal("./src/main/resources/instances/1t/TerminalA_20_10_3_2_100.json");
+        Terminal targetTerminal = JsonReader.readTerminal("./src/main/resources/instances/1t/targetTerminalA_20_10_3_2_100.json");
+        Terminal terminalToConvert = JsonReader.readTerminal("./src/main/resources/instances/2mh/MH2Terminal_20_10_3_2_100.json");
+        terminalToConvert.convertTerminal();
         System.out.println("test");
     }
 }

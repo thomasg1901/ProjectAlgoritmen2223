@@ -1,5 +1,6 @@
 package main;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,11 +8,13 @@ import java.util.Map;
 
 public class Terminal {
     private String name;
-    private final List<Container> containers;
+    private List<Container> containers;
 
-    private final Slot[] slots;
+    private Slot[] slots;
     private List<Crane> cranes;
     private final int maxHeight;
+
+    private int targetHeight;
 
     private final int width;
 
@@ -26,6 +29,18 @@ public class Terminal {
         this.maxHeight = maxHeight;
         this.width = width;
         this.length = length;
+        this.targetHeight = maxHeight;
+    }
+
+    public Terminal(String name, List<Container> containers, Slot[] slots, List<Crane> cranes, int maxHeight, int targetHeight, int width, int length) {
+        this.name = name;
+        this.containers = containers;
+        this.slots = slots;
+        this.cranes = cranes;
+        this.maxHeight = maxHeight;
+        this.width = width;
+        this.length = length;
+        this.targetHeight = targetHeight;
     }
 
     public List<Container> getContainers() {
@@ -143,5 +158,34 @@ public class Terminal {
 
     public void setCranes(List<Crane> cranes) {
         this.cranes = cranes;
+    }
+
+    public void setContainers(List<Container> containers) {
+        this.containers = containers;
+    }
+
+    public void setSlots(Slot[] slots) {
+        this.slots = slots;
+    }
+
+    public void convertTerminal(){
+        if(maxHeight != targetHeight){
+            List<Slot> slots = getSlotsAboveMaxHeight();
+            System.out.println("test");
+        }
+    }
+
+    public List<Slot> getFeasibleLeftSlots(){
+
+    }
+
+    public List<Slot> getSlotsAboveMaxHeight(){
+        List<Slot> slotsTooHigh = new ArrayList<>();
+        for(int i = 0; i < slots.length; i++){
+            if(slots[i].getSlotHeight() > targetHeight){
+                slotsTooHigh.add(slots[i]);
+            }
+        }
+        return slotsTooHigh;
     }
 }
