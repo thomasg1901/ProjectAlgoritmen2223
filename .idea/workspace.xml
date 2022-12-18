@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Migrated methods to Target.java">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/JsonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/JsonReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Changed slots to slotgrid">
+      <change beforePath="$PROJECT_DIR$/src/main/Scheduler.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671375437044</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Changed slots to slotgrid">
+      <created>1671377835052</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1671377835052</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -152,7 +156,8 @@
     <MESSAGE value="Migration to Maven" />
     <MESSAGE value="Updated main &amp; terminal.java" />
     <MESSAGE value="Migrated methods to Target.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="Migrated methods to Target.java" />
+    <MESSAGE value="Changed slots to slotgrid" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed slots to slotgrid" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -161,11 +166,6 @@
           <url>file://$PROJECT_DIR$/src/main/JsonReader.java</url>
           <line>68</line>
           <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Main.java</url>
-          <line>25</line>
-          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
