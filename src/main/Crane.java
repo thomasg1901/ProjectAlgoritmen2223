@@ -2,12 +2,13 @@ package main;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Crane {
 
     private int id;
     private Point position;
-
     private HashMap<Double, Point> trajectory;
     private double speedx;
     private double speedy;

@@ -1,5 +1,6 @@
 package main;
 import java.awt.*;
+import java.util.Objects;
 import java.util.Stack;
 
 public class Slot {
@@ -50,5 +51,18 @@ public class Slot {
 
     public Container removeContainerFromSlot(){
         return this.containerStack.pop();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Slot slot = (Slot) o;
+        return id == slot.id && Objects.equals(location, slot.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, location, containerStack);
     }
 }

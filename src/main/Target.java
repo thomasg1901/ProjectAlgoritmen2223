@@ -5,6 +5,11 @@ import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparingDouble;
 import static java.util.Comparator.comparingInt;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Target {
     Terminal initialTerminal;
@@ -27,9 +32,19 @@ public class Target {
         this.moveAssignments = calculateToTargetHeight();
     }
 
+    private List<Movement> calculateToFinialTerminal(){
+        List<Movement> movements = new ArrayList<>();
+        Assignment[] initialAssignments = initialTerminal.getAssignments();
+        Assignment[] finalAssignments = finalTerminal.getAssignments();
 
-    private List<Movement> calculateToFinalTerminal(){
-        return null;
+        for (Assignment assignment: finalAssignments) {
+            if(Arrays.stream(initialAssignments).noneMatch(assignment::equals)){
+                Assignment initialAsignment = Arrays.stream(initialAssignments).filter(assignment1 -> assignment1.getContainer().getId() == assignment.getContainer().getId()).findFirst().get();
+                movements.add(new Movement(initialAsignment.getContainerSlots(),assignment.getContainerSlots(), assignment.getContainer(), initialTerminal));
+            }
+        }
+
+        return movements;
     }
 
     private List<Movement> calculateToTargetHeight(){
