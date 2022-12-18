@@ -70,16 +70,16 @@ public class Target {
                     feasibleLeftSlots.remove(minPossibleLocationsContainer);
                     for(Container container : feasibleLeftSlots.keySet()){
                         if(feasibleLeftSlots.get(container).contains(leftMostSlot)){
-                            // TODO - keep feasible slot if it is still stackable on that slot
+                            if(!initialTerminal.isStackable(container, getSlotsFromLeftMostSlot(leftMostSlot, initialTerminal.getSlotGrid(), container.getLength()), initialTerminal.getTargetHeight())){
+                                feasibleLeftSlots.get(container).remove(leftMostSlot);
+                            }
                         }
-                        feasibleLeftSlots.get(container).remove(leftMostSlot);
                     }
                 }
             }
         }
         return movements;
     }
-
     public Slot[] getSlotsFromLeftMostSlot(Slot leftMostSlot, Slot[][] slotGrid, int length){
         Slot[] slots = new Slot[length];
         slots[0] = slotGrid[(int) leftMostSlot.getLocation().getX()][(int) leftMostSlot.getLocation().getY()];
