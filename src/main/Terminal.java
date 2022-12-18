@@ -70,8 +70,8 @@ public class Terminal {
     }
 
     public void moveCrane(Crane crane, Point p, double startTime){
-        double timex = ((double)(p.getX() - crane.getPosition().getX()))/crane.getSpeedx();
-        double timey = ((double) (p.getY() - crane.getPosition().getY()))/crane.getSpeedy();
+        double timex = ((double) Math.abs(p.getX() - crane.getPosition().getX()))/crane.getSpeedx();
+        double timey = ((double) Math.abs(p.getY() - crane.getPosition().getY()))/crane.getSpeedy();
 
         // Control movement
         if(willCollideWithOtherCranes(p, crane, 0))
@@ -153,15 +153,14 @@ public class Terminal {
     private boolean willCollideWithOtherCranes(Point desitnation, Crane movingCrane, int delta){
         for (Crane crane : cranes) {
             if (crane.getId() == movingCrane.getId()) {
-                continue;
-            }
+                if(movingCrane.getPosition().getX() < desitnation.getX()){ // move right
+                    if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() + delta < desitnation.getX()) // Check if crane comes to close to the other cranes
+                        return true;
+                }else { // move left
+                    if(movingCrane.getPosition().getX() > crane.getPosition().getX()  && desitnation.getX() < crane.getPosition().getX() - delta)
+                        return true;
+                }
 
-            if(movingCrane.getPosition().getX() < desitnation.getX()){ // move right
-                if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() + delta < desitnation.getX()) // Check if crane comes to close to the other cranes
-                    return true;
-            }else { // move left
-                if(movingCrane.getPosition().getX() > crane.getPosition().getX()  && desitnation.getX() < crane.getPosition().getX() - delta)
-                    return true;
             }
         }
         return false;

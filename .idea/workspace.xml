@@ -151,7 +151,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671399222467</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="movement of the crane">
+      <created>1671399740309</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1671399740309</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -186,11 +193,17 @@
           <line>68</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/Terminal.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="main.Assignment" memberName="container" />
+        <PinnedItemInfo parentTag="main.Terminal" memberName="cranes" />
         <PinnedItemInfo parentTag="main.Slot" memberName="containerStack" />
         <PinnedItemInfo parentTag="main.Container" memberName="id" />
         <PinnedItemInfo parentTag="main.Slot" memberName="location" />
