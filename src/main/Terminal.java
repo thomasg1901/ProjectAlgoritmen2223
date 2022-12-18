@@ -10,7 +10,9 @@ public class Terminal {
     private String name;
     private List<Container> containers;
 
-    private Slot[] slots;
+    private Assignment[] assignments;
+
+    private Slot[][] slotGrid;
     private List<Crane> cranes;
     private final int maxHeight;
 
@@ -20,22 +22,11 @@ public class Terminal {
 
     private final int length;
 
-
-    public Terminal(String name, List<Container> containers, Slot[] slots, List<Crane> cranes, int maxHeight, int width, int length) {
+    public Terminal(String name, List<Container> containers, Slot[][] slotGrid, Assignment[] assignments, List<Crane> cranes, int maxHeight, int targetHeight, int width, int length) {
         this.name = name;
         this.containers = containers;
-        this.slots = slots;
-        this.cranes = cranes;
-        this.maxHeight = maxHeight;
-        this.width = width;
-        this.length = length;
-        this.targetHeight = maxHeight;
-    }
-
-    public Terminal(String name, List<Container> containers, Slot[] slots, List<Crane> cranes, int maxHeight, int targetHeight, int width, int length) {
-        this.name = name;
-        this.containers = containers;
-        this.slots = slots;
+        this.slotGrid = slotGrid;
+        this.assignments = assignments;
         this.cranes = cranes;
         this.maxHeight = maxHeight;
         this.width = width;
@@ -47,8 +38,8 @@ public class Terminal {
         return containers;
     }
 
-    public Slot[] getSlots() {
-        return slots;
+    public Assignment[] getAssignments() {
+        return assignments;
     }
 
     public int getMaxHeight() {
@@ -57,6 +48,10 @@ public class Terminal {
 
     public int getTargetHeight() {
         return targetHeight;
+    }
+
+    public Slot[][] getSlotGrid() {
+        return slotGrid;
     }
 
     public void addContainer(Container container) {
@@ -177,7 +172,7 @@ public class Terminal {
         this.containers = containers;
     }
 
-    public void setSlots(Slot[] slots) {
-        this.slots = slots;
+    public void setSlotGrid(Slot[][] slotGrid) {
+        this.slotGrid = slotGrid;
     }
 }

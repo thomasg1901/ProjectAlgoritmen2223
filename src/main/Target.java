@@ -1,7 +1,9 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Target {
     Terminal initialTerminal;
@@ -35,7 +37,7 @@ public class Target {
 
     public void convertTerminal(){
         if(maxHeight > targetHeight){
-            List<Slot> slots = getSlotsAboveTargetHeight(initialTerminal.getSlots());
+            Map<Integer, List<Slot>> slots = getSlotsAboveTargetHeight(initialTerminal.getSlotGrid());
 //            for(Slot slot : slots){
 //                List<Slot> feasibleLeftSlots = getFeasibleLeftSlots()
 //            }
@@ -46,11 +48,18 @@ public class Target {
         return null;
     }
 
-    public List<Slot> getSlotsAboveTargetHeight(Slot[] slots){
-        List<Slot> slotsTooHigh = new ArrayList<>();
-        for (Slot slot : slots) {
-            if (slot.getSlotHeight() > targetHeight) {
-                slotsTooHigh.add(slot);
+    public Map<Integer, List<Slot>> getSlotsAboveTargetHeight(Slot[][] slotGrid){
+        Map<Integer, List<Slot>> slotsTooHigh = new HashMap<>();
+        for (int x = 0; x < slotGrid.length; x++) {
+            for (int y = 0; y < slotGrid[x].length; y++){
+                Slot slot = slotGrid[x][y];
+                if (slot.getSlotHeight() > targetHeight) {
+                    if(slotsTooHigh.containsKey(slot.getSlotHeight()))
+                        slotsTooHigh.put(slot.getSlotHeight(), new ArrayList<>());
+                    List<Slot> slotsList = slotsTooHigh.get(slot.getSlotHeight());
+                    slotsList.add(slot);
+                    slotsTooHigh.put(slot.getSlotHeight(), slotsList);
+                }
             }
         }
         return slotsTooHigh;

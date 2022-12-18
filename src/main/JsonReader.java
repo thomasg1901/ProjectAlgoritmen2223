@@ -22,33 +22,37 @@ public class JsonReader {
             Map<?, ?> map = gson.fromJson(reader, Map.class);
 
             List<Container> containers = new ArrayList<>();
-            List<Slot> slots = new ArrayList<>();
-//            List<Assignment> assignments = new ArrayList<>();
+            Slot[][] slotGrid = new Slot[((Double)map.get("length")).intValue()][((Double)map.get("width")).intValue()];
+            Map<Integer, Point> slotLocations = new HashMap<>();
+            List<Assignment> assignments = new ArrayList<>();
             for(Map<String, Double> containerMap : (List<Map>)map.get("containers")){
                 containers.add(new Container(containerMap.get("id").intValue(), containerMap.get("length").intValue()));
             }
 
             for(Map<String, Double> slotMap : (List<Map>)map.get("slots")){
-                slots.add(new Slot(slotMap.get("id").intValue(), new Point(slotMap.get("x").intValue(), slotMap.get("y").intValue())));
+                int slotId = slotMap.get("id").intValue();
+                int slotX = slotMap.get("x").intValue();
+                int slotY = slotMap.get("y").intValue();
+                Point location = new Point(slotX, slotY);
+                slotGrid[slotX][slotY] = new Slot(slotId, location);
+                slotLocations.put(slotId, location);
             }
-
 
             for (Map<String, ?> assignmentMap : (List<Map>)map.get("assignments")) {
                 Container assignmentContainer = containers.stream().filter(container -> container.getId() == ((Double)assignmentMap.get("container_id")).intValue()).collect(Collectors.toList()).get(0);
                 Slot[] assignmentSlots = new Slot[assignmentContainer.getLength()];
                 int leftMostSlotId = ((Double)assignmentMap.get("slot_id")).intValue();
-                Slot leftMostSlot = slots.stream().filter(slot -> slot.getId() == (leftMostSlotId)).collect(Collectors.toList()).get(0);
-                assignmentSlots[0] = leftMostSlot;
+                Point leftMostSlotLocation = slotLocations.get(leftMostSlotId);
+                assignmentSlots[0] = slotGrid[(int) leftMostSlotLocation.getX()][(int) leftMostSlotLocation.getY()];
                 for(int i = 1; i < assignmentContainer.getLength(); i++){
-                    Point nextSlotLocation = new Point(leftMostSlot.getLocation().getX()+i, leftMostSlot.getLocation().getY());
-                    assignmentSlots[i] = slots.stream().filter(slot -> slot.getLocation().equals(nextSlotLocation)).collect(Collectors.toList()).get(0);
+                    assignmentSlots[i] = slotGrid[(int) leftMostSlotLocation.getX()+i][(int) leftMostSlotLocation.getY()];
                 }
                 assignmentContainer.setSlots(assignmentSlots);
-//                assignments.add(new Assignment(assignmentContainer, assignmentSlots));
+                assignments.add(new Assignment(assignmentContainer, assignmentSlots));
             }
 
+            List<Crane> cranes = new ArrayList<>();
             for (Map<String, Double> craneMap: (List<Map>)map.get("cranes")){
-                List<Crane> cranes = new ArrayList<>();
                 cranes.add(new Crane(new Point(craneMap.get("x").doubleValue(), craneMap.get("y").doubleValue()), craneMap.get("xspeed").doubleValue(), craneMap.get("yspeed").doubleValue(), craneMap.get("xmin").doubleValue(), craneMap.get("xmax").doubleValue(), craneMap.get("ymin").doubleValue(), craneMap.get("ymax").doubleValue()));
             }
             int maxHeight = ((Double)map.get("maxheight")).intValue();
@@ -56,7 +60,7 @@ public class JsonReader {
             if(map.containsKey("targetheight")){
                 targetHeight = ((Double)map.get("targetheight")).intValue();
             }
-            Terminal terminal = new Terminal(map.get("name").toString(), containers, slots.toArray(new Slot[0]), new ArrayList<>(), maxHeight, targetHeight, ((Double)map.get("width")).intValue(), ((Double)map.get("length")).intValue());
+            Terminal terminal = new Terminal(map.get("name").toString(), containers, slotGrid, assignments.toArray(new Assignment[0]), cranes, maxHeight, targetHeight, ((Double)map.get("width")).intValue(), ((Double)map.get("length")).intValue());
             for(Container container : terminal.getContainers()){
                 terminal.putContainerInSlots(container, container.getSlots());
             }
