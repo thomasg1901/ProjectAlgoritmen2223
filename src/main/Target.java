@@ -3,17 +3,37 @@ package main;
 import java.util.List;
 
 public class Target {
+    Terminal initialTerminal;
     Terminal finalTerminal;
     private int maxHeight;
     private int targetHeight;
-    private List<Assignment> assignments;
+    private List<Assignment> moveAssignments;
 
-    public Target(Terminal finalTerminal, int maxHeight, int targetHeight, List<Assignment> assignments) {
+    public Target(Terminal intialTerminal, Terminal finalTerminal, int maxHeight) {
+        this.initialTerminal = intialTerminal;
         this.finalTerminal = finalTerminal;
+
+        this.maxHeight = maxHeight;
+        this.moveAssignments = calculateToFinialTerminal();
+    }
+
+    public Target(Terminal initialTerminal, int maxHeight, int targetHeight){
+        this.initialTerminal = initialTerminal;
         this.maxHeight = maxHeight;
         this.targetHeight = targetHeight;
-        this.assignments = assignments;
+
+        this.moveAssignments = calculateToTargetHeight();
     }
+
+    private List<Assignment> calculateToFinialTerminal(){
+
+    }
+
+    private List<Assignment> calculateToTargetHeight(){
+
+    }
+
+
 
     public Terminal getFinalTerminal() {
         return finalTerminal;
@@ -39,11 +59,11 @@ public class Target {
         this.targetHeight = targetHeight;
     }
 
-    public List<Assignment> getAssignments() {
-        return assignments;
+    public List<Assignment> getMoveAssignments() {
+        return moveAssignments;
     }
 
-    public void setAssignments(List<Assignment> assignments) {
-        this.assignments = assignments;
+    public void setMoveAssignments(List<Assignment> moveAssignments) {
+        this.moveAssignments = moveAssignments;
     }
 }

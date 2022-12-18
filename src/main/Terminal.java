@@ -152,6 +152,8 @@ public class Terminal {
         return isStackedOnSmaller;
     }
 
+
+
     public List<Crane> getCranes() {
         return cranes;
     }
@@ -176,7 +178,7 @@ public class Terminal {
     }
 
     public List<Slot> getFeasibleLeftSlots(){
-
+        return null;
     }
 
     public List<Slot> getSlotsAboveMaxHeight(){

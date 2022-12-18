@@ -20,6 +20,5 @@ public class Main {
         Terminal targetTerminal = JsonReader.readTerminal("./src/main/resources/instances/1t/targetTerminalA_20_10_3_2_100.json");
         Terminal terminalToConvert = JsonReader.readTerminal("./src/main/resources/instances/2mh/MH2Terminal_20_10_3_2_100.json");
         terminalToConvert.convertTerminal();
-        System.out.println("test");
     }
 }
