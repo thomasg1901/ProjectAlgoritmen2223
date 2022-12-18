@@ -23,6 +23,7 @@ public class Target {
         this.finalTerminal = finalTerminal;
         this.maxHeight = initialTerminal.getMaxHeight();
         this.moveAssignments = calculateToFinalTerminal();
+        initialTerminal.executeMovements(moveAssignments);
     }
 
     public Target(Terminal initialTerminal){
@@ -39,8 +40,13 @@ public class Target {
 
         for (Assignment assignment: finalAssignments) {
             if(Arrays.stream(initialAssignments).noneMatch(assignment::equals)){
-                Assignment initialAsignment = Arrays.stream(initialAssignments).filter(assignment1 -> assignment1.getContainer().getId() == assignment.getContainer().getId()).findFirst().get();
-                movements.add(new Movement(initialAsignment.getContainerSlots(),assignment.getContainerSlots(), assignment.getContainer(), initialTerminal));
+                Assignment initialAssignment = Arrays.stream(initialAssignments).filter(assignment1 -> assignment1.getContainer().getId() == assignment.getContainer().getId()).findFirst().get();
+                Slot[] toSlots = new Slot[assignment.getContainer().getLength()];
+                for (int i = 0; i < assignment.getContainerSlots().length; i++) {
+                    Point slotLocation = assignment.getContainerSlots()[i].getLocation();
+                    toSlots[i] = initialTerminal.getSlotGrid()[(int) slotLocation.getX()][(int) slotLocation.getY()];
+                }
+                movements.add(new Movement(initialAssignment.getContainerSlots(),toSlots, assignment.getContainer(), initialTerminal));
             }
         }
 

@@ -1,9 +1,8 @@
 package main;
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class Terminal {
@@ -75,30 +74,94 @@ public class Terminal {
         double timey = ((double) (p.getY() - crane.getPosition().getY()))/crane.getSpeedy();
 
         // Control movement
-        if(controlCollision(p, crane, 0))
+        if(willCollideWithOtherCranes(p, crane, 0))
             throw new IllegalArgumentException("Crane comes to close to the other cranes to move to this point");
 
         crane.setPosition(p);
 
         // Save trajectory
         HashMap<Double, Point> trajectory = crane.getTrajectory();
-        trajectory.put(startTime + timex + timey, p);
+        trajectory.put(startTime + Math.max(timex,timey), p);
         crane.setTrajectory(trajectory);
     }
 
     public void executeMovements(List<Movement> movements){
+        for (Movement movement : movements) {
 
+
+            ArrayList<Crane> possibleCranes = getPossibleCranesForMovement(movement);
+            Crane assignedCrane = assignCrane(possibleCranes);
+
+
+            // generate points to move the crane
+            List<Point> movementPoints = generatePointsFromMovement(movement, assignedCrane);
+
+            for (Point p : movementPoints) {
+                System.out.println(willCollideWithOtherCranes(p,assignedCrane,1));
+                if(assignedCrane.getTrajectory().isEmpty())
+                    moveCrane(assignedCrane, p, 0);
+                else
+                    moveCrane(assignedCrane, p, Collections.max(assignedCrane.getTrajectory().keySet()));
+            }
+            System.out.println(possibleCranes.size());
+            System.out.println(isStackable(movement.getContainer(),movement.getSlotsTo(),this.maxHeight));
+        }
     }
 
-    private boolean controlCollision(Point p, Crane c, int delta){
-        for (Crane crane: cranes) {
-            if (crane.getId() != c.getId()){
-                if(c.getPosition().getX() < p.getX()) // Crane moves left
-                    if (c.getPosition().getX() < crane.getPosition().getX() + delta) // Check if crane comes to close to the other cranes
-                        return true;
-                    else                        // Crane moves right
-                        if(c.getPosition().getX() > crane.getPosition().getX() - delta) // Check if crane comes to close to the other cranes
-                            return true;
+    private List<Point> generatePointsFromMovement(Movement movement, Crane crane){
+        ArrayList<Point> moveCraneTo = new ArrayList<>();
+        moveCraneTo.add(getCenterLocationForCrane(movement.getSlotsFrom(), movement.getContainer()));
+        moveCraneTo.add(getCenterLocationForCrane(movement.getSlotsTo(), movement.getContainer()));
+
+        return moveCraneTo;
+    }
+
+    private Crane assignCrane(List<Crane> cranes){
+        Crane assignedCrane = null;
+        for (Crane crane : cranes) {
+            if(assignedCrane == null || assignedCrane.getTrajectory().size() > crane.getTrajectory().size())
+                assignedCrane = crane;
+        }
+
+        return assignedCrane;
+    }
+
+    private ArrayList<Crane> getPossibleCranesForMovement(Movement movement){
+        ArrayList<Crane> cranes = new ArrayList<>();
+        for (Crane crane: this.cranes) {
+            Point from = getCenterLocationForCrane(movement.getSlotsFrom(), movement.getContainer());
+            Point to = getCenterLocationForCrane(movement.getSlotsTo(), movement.getContainer());
+
+            double minX = Math.min(from.getX(), to.getX());
+            double maxX = Math.max(from.getX(), to.getX());
+
+            if (Math.max(crane.getxMax(), maxX) == crane.getxMax() && Math.min(minX, crane.getxMin()) == crane.getxMin()){
+                cranes.add(crane);
+            }
+        }
+
+        return cranes;
+    }
+
+    private Point getCenterLocationForCrane(Slot[] slots, Container container){
+        double x = slots[0].getLocation().getX() + container.getLength()/2.0;
+        double y = slots[0].getLocation().getY() + 0.5;
+
+        return new Point(x,y);
+    }
+
+    private boolean willCollideWithOtherCranes(Point desitnation, Crane movingCrane, int delta){
+        for (Crane crane : cranes) {
+            if (crane.getId() == movingCrane.getId()) {
+                continue;
+            }
+
+            if(movingCrane.getPosition().getX() < desitnation.getX()){ // move right
+                if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() + delta < desitnation.getX()) // Check if crane comes to close to the other cranes
+                    return true;
+            }else { // move left
+                if(movingCrane.getPosition().getX() > crane.getPosition().getX()  && desitnation.getX() < crane.getPosition().getX() - delta)
+                    return true;
             }
         }
         return false;
