@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="movements of crane with two terminals">
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="movement of the crane">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Crane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Crane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -145,7 +144,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671382114666</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="movement of the crane">
+      <created>1671399222467</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1671399222467</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -169,7 +175,8 @@
     <MESSAGE value="Migrated methods to Target.java" />
     <MESSAGE value="Changed slots to slotgrid" />
     <MESSAGE value="movements of crane with two terminals" />
-    <option name="LAST_COMMIT_MESSAGE" value="movements of crane with two terminals" />
+    <MESSAGE value="movement of the crane" />
+    <option name="LAST_COMMIT_MESSAGE" value="movement of the crane" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -189,5 +196,10 @@
         <PinnedItemInfo parentTag="main.Slot" memberName="location" />
       </pinned-members>
     </pin-to-top-manager>
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="movement.container" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

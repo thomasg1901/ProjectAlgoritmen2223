@@ -95,16 +95,16 @@ public class Terminal {
 
             // generate points to move the crane
             List<Point> movementPoints = generatePointsFromMovement(movement, assignedCrane);
+            System.out.println(possibleCranes.size());
+            System.out.println(isStackable(movement.getContainer(),movement.getSlotsTo(),this.maxHeight));
 
             for (Point p : movementPoints) {
-                System.out.println(willCollideWithOtherCranes(p,assignedCrane,1));
+                System.out.println(!willCollideWithOtherCranes(p,assignedCrane,1));
                 if(assignedCrane.getTrajectory().isEmpty())
                     moveCrane(assignedCrane, p, 0);
                 else
                     moveCrane(assignedCrane, p, Collections.max(assignedCrane.getTrajectory().keySet()));
             }
-            System.out.println(possibleCranes.size());
-            System.out.println(isStackable(movement.getContainer(),movement.getSlotsTo(),this.maxHeight));
         }
     }
 
