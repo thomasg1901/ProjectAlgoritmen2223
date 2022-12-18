@@ -32,7 +32,7 @@ public class Target {
         this.moveAssignments = calculateToTargetHeight();
     }
 
-    private List<Movement> calculateToFinialTerminal(){
+    private List<Movement> calculateToFinalTerminal(){
         List<Movement> movements = new ArrayList<>();
         Assignment[] initialAssignments = initialTerminal.getAssignments();
         Assignment[] finalAssignments = finalTerminal.getAssignments();
