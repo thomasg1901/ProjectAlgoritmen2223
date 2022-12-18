@@ -55,6 +55,10 @@ public class Terminal {
         return maxHeight;
     }
 
+    public int getTargetHeight() {
+        return targetHeight;
+    }
+
     public void addContainer(Container container) {
         containers.add(container);
     }
@@ -119,6 +123,15 @@ public class Terminal {
         }
     }
 
+    public boolean isContainerMovable(Container container){
+        Slot[] containerSlots = container.getSlots();
+        boolean isMovable = true;
+        for(Slot containerSlot : containerSlots){
+            isMovable = isMovable && containerSlot.getContainerStack().peek() == container;
+        }
+        return isMovable;
+    }
+
 
     public boolean isStackable(Container container, Slot[] slots){
         // Check 1: verify if all container units are on the same height
@@ -152,8 +165,6 @@ public class Terminal {
         return isStackedOnSmaller;
     }
 
-
-
     public List<Crane> getCranes() {
         return cranes;
     }
@@ -168,26 +179,5 @@ public class Terminal {
 
     public void setSlots(Slot[] slots) {
         this.slots = slots;
-    }
-
-    public void convertTerminal(){
-        if(maxHeight != targetHeight){
-            List<Slot> slots = getSlotsAboveMaxHeight();
-            System.out.println("test");
-        }
-    }
-
-    public List<Slot> getFeasibleLeftSlots(){
-        return null;
-    }
-
-    public List<Slot> getSlotsAboveMaxHeight(){
-        List<Slot> slotsTooHigh = new ArrayList<>();
-        for(int i = 0; i < slots.length; i++){
-            if(slots[i].getSlotHeight() > targetHeight){
-                slotsTooHigh.add(slots[i]);
-            }
-        }
-        return slotsTooHigh;
     }
 }

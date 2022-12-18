@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Target {
@@ -9,31 +10,51 @@ public class Target {
     private int targetHeight;
     private List<Assignment> moveAssignments;
 
-    public Target(Terminal intialTerminal, Terminal finalTerminal, int maxHeight) {
-        this.initialTerminal = intialTerminal;
+    public Target(Terminal initialTerminal, Terminal finalTerminal) {
+        this.initialTerminal = initialTerminal;
         this.finalTerminal = finalTerminal;
-
-        this.maxHeight = maxHeight;
-        this.moveAssignments = calculateToFinialTerminal();
+        this.maxHeight = initialTerminal.getMaxHeight();
+        this.moveAssignments = calculateToFinalTerminal();
     }
 
-    public Target(Terminal initialTerminal, int maxHeight, int targetHeight){
+    public Target(Terminal initialTerminal){
         this.initialTerminal = initialTerminal;
-        this.maxHeight = maxHeight;
-        this.targetHeight = targetHeight;
-
+        this.maxHeight = this.initialTerminal.getMaxHeight();
+        this.targetHeight = this.initialTerminal.getTargetHeight();
         this.moveAssignments = calculateToTargetHeight();
     }
 
-    private List<Assignment> calculateToFinialTerminal(){
 
+    private List<Assignment> calculateToFinalTerminal(){
+        return null;
     }
 
     private List<Assignment> calculateToTargetHeight(){
-
+        return null;
     }
 
+    public void convertTerminal(){
+        if(maxHeight > targetHeight){
+            List<Slot> slots = getSlotsAboveTargetHeight(initialTerminal.getSlots());
+//            for(Slot slot : slots){
+//                List<Slot> feasibleLeftSlots = getFeasibleLeftSlots()
+//            }
+        }
+    }
 
+    public List<Slot> getFeasibleLeftSlots(Container container){
+        return null;
+    }
+
+    public List<Slot> getSlotsAboveTargetHeight(Slot[] slots){
+        List<Slot> slotsTooHigh = new ArrayList<>();
+        for (Slot slot : slots) {
+            if (slot.getSlotHeight() > targetHeight) {
+                slotsTooHigh.add(slot);
+            }
+        }
+        return slotsTooHigh;
+    }
 
     public Terminal getFinalTerminal() {
         return finalTerminal;
