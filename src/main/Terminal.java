@@ -106,11 +106,11 @@ public class Terminal {
         return false;
     }
 
-    public void putContainerInSlots(Container container, Slot[] slots) throws Exception {
+    public void putContainerInSlots(Container container, Slot[] slots, int maxHeight) throws Exception {
         if(slots.length != container.getLength()){
             throw new Exception();
         }
-        if(isStackable(container, slots)){
+        if(isStackable(container, slots, maxHeight)){
             container.setSlots(slots);
             for(Slot slot : slots){
                 slot.stackContainer(container);
@@ -128,7 +128,7 @@ public class Terminal {
     }
 
 
-    public boolean isStackable(Container container, Slot[] slots){
+    public boolean isStackable(Container container, Slot[] slots, int maxHeight){
         // Check 1: verify if all container units are on the same height
         boolean allSame = true;
         int firstHeight = slots[0].getContainerStack().size();

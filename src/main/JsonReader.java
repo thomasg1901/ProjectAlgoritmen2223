@@ -62,11 +62,10 @@ public class JsonReader {
             }
             Terminal terminal = new Terminal(map.get("name").toString(), containers, slotGrid, assignments.toArray(new Assignment[0]), cranes, maxHeight, targetHeight, ((Double)map.get("width")).intValue(), ((Double)map.get("length")).intValue());
             for(Container container : terminal.getContainers()){
-                terminal.putContainerInSlots(container, container.getSlots());
+                terminal.putContainerInSlots(container, container.getSlots(), maxHeight);
             }
             reader.close();
             return terminal;
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }

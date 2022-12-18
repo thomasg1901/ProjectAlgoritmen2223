@@ -6,7 +6,7 @@ public class Movement {
 
     private final Terminal terminal;
 
-    public Movement(Slot[] slotFrom, Slot[] slotTo, Container container, Terminal terminal){
+    public Movement(Slot[] slotsFrom, Slot[] slotsTo, Container container, Terminal terminal){
         this.slotsFrom = slotsFrom;
         this.slotsTo = slotsTo;
         this.container = container;
@@ -36,7 +36,7 @@ public class Movement {
         }
 
         // Check if container can be put on top of the destination slot
-        if(!terminal.isStackable(container, slotsTo)){
+        if(!terminal.isStackable(container, slotsTo, terminal.getMaxHeight())){
             return false;
         }
 

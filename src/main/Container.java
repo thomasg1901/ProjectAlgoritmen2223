@@ -37,6 +37,16 @@ public class Container {
         this.slots = slots;
     }
 
+    public Slot getLeftMostSlot(){
+        Slot leftMostLost = slots[0];
+        for(int i=1; i < slots.length; i++) {
+            if(slots[i].getLocation().getX() < leftMostLost.getLocation().getX()) {
+                leftMostLost = slots[i];
+            }
+        }
+        return leftMostLost;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
