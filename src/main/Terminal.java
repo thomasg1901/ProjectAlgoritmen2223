@@ -154,10 +154,10 @@ public class Terminal {
         for (Crane crane : cranes) {
             if (crane.getId() == movingCrane.getId()) {
                 if(movingCrane.getPosition().getX() < desitnation.getX()){ // move right
-                    if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() + delta < desitnation.getX()) // Check if crane comes to close to the other cranes
+                    if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() - delta < desitnation.getX()) // Check if crane comes to close to the other cranes
                         return true;
                 }else { // move left
-                    if(movingCrane.getPosition().getX() > crane.getPosition().getX()  && desitnation.getX() < crane.getPosition().getX() - delta)
+                    if(movingCrane.getPosition().getX() > crane.getPosition().getX()  && desitnation.getX() < crane.getPosition().getX() + delta)
                         return true;
                 }
 
