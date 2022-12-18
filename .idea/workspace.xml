@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Added Yard, Slot">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_10.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_plexus_plexus_utils_1_5_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_json_json_20220924.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/JsonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/JsonReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Slot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Slot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/terminal22_1_100_1_10.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/terminal22_1_100_1_10target.json" beforeDir="false" />
-    </list>
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Updated main &amp; terminal.java" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,7 +43,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "last_opened_file_path": "/home/jef/IdeaProjects/distributedsystems1",
     "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
+    "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.0"
   }
 }]]></component>
@@ -126,7 +111,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668002014068</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Updated main &amp; terminal.java">
+      <created>1671287140492</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1671287140492</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -146,7 +138,8 @@
     <MESSAGE value="Added classes" />
     <MESSAGE value="added getters setters container" />
     <MESSAGE value="Migration to Maven" />
-    <option name="LAST_COMMIT_MESSAGE" value="Migration to Maven" />
+    <MESSAGE value="Updated main &amp; terminal.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated main &amp; terminal.java" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
