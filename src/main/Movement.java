@@ -7,8 +7,8 @@ public class Movement {
     private final Terminal terminal;
 
     public Movement(Slot[] slotFrom, Slot[] slotTo, Container container, Terminal terminal){
-        this.slotsFrom = slotsFrom;
-        this.slotsTo = slotsTo;
+        this.slotsFrom = slotFrom;
+        this.slotsTo = slotTo;
         this.container = container;
         this.terminal = terminal;
     }

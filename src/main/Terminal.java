@@ -86,6 +86,10 @@ public class Terminal {
         crane.setTrajectory(trajectory);
     }
 
+    public void executeMovements(List<Movement> movements){
+
+    }
+
     private boolean controlCollision(Point p, Crane c, int delta){
         for (Crane crane: cranes) {
             if (crane.getId() != c.getId()){
@@ -97,12 +101,6 @@ public class Terminal {
                             return true;
             }
         }
-        return false;
-    }
-
-    private boolean controlSafety(HashMap<Double, Point> trajectory, HashMap<Double, Point> trajectory2, int delta){
-        // Check if the trajectories come closer than allowed delta
-
         return false;
     }
 

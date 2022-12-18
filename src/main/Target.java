@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,28 +11,38 @@ public class Target {
     Terminal finalTerminal;
     private int maxHeight;
     private int targetHeight;
-    private List<Assignment> moveAssignments;
+    private List<Movement> movements;
 
     public Target(Terminal initialTerminal, Terminal finalTerminal) {
         this.initialTerminal = initialTerminal;
         this.finalTerminal = finalTerminal;
         this.maxHeight = initialTerminal.getMaxHeight();
-        this.moveAssignments = calculateToFinalTerminal();
+        this.movements = calculateToFinialTerminal();
     }
 
     public Target(Terminal initialTerminal){
         this.initialTerminal = initialTerminal;
         this.maxHeight = this.initialTerminal.getMaxHeight();
         this.targetHeight = this.initialTerminal.getTargetHeight();
-        this.moveAssignments = calculateToTargetHeight();
+        this.movements = calculateToTargetHeight();
     }
 
+    private List<Movement> calculateToFinialTerminal(){
+        List<Movement> movements = new ArrayList<>();
+        Assignment[] initialAssignments = initialTerminal.getAssignments();
+        Assignment[] finalAssignments = finalTerminal.getAssignments();
 
-    private List<Assignment> calculateToFinalTerminal(){
-        return null;
+        for (Assignment assignment: finalAssignments) {
+            if(Arrays.stream(initialAssignments).noneMatch(assignment::equals)){
+                Assignment initialAsignment = Arrays.stream(initialAssignments).filter(assignment1 -> assignment1.getContainer().getId() == assignment.getContainer().getId()).findFirst().get();
+                movements.add(new Movement(initialAsignment.getContainerSlots(),assignment.getContainerSlots(), assignment.getContainer(), initialTerminal));
+            }
+        }
+
+        return movements;
     }
 
-    private List<Assignment> calculateToTargetHeight(){
+    private List<Movement> calculateToTargetHeight(){
         return null;
     }
 
@@ -89,11 +100,11 @@ public class Target {
         this.targetHeight = targetHeight;
     }
 
-    public List<Assignment> getMoveAssignments() {
-        return moveAssignments;
+    public List<Movement> getMovements() {
+        return this.movements;
     }
 
-    public void setMoveAssignments(List<Assignment> moveAssignments) {
-        this.moveAssignments = moveAssignments;
+    public void setMoveAssignments(List<Movement> movements) {
+        this.movements = movements;
     }
 }

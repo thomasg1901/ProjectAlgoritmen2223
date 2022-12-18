@@ -1,7 +1,5 @@
 package main;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Assignment implements Comparable {
     private Container container;
@@ -32,5 +30,20 @@ public class Assignment implements Comparable {
     @Override
     public int compareTo(Object o) {
         return ((Assignment)o).getContainer().getLength() - this.getContainer().getLength();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Assignment that = (Assignment) o;
+        return Objects.equals(container, that.container) && Arrays.equals(containerSlots, that.containerSlots);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(container);
+        result = 31 * result + Arrays.hashCode(containerSlots);
+        return result;
     }
 }
