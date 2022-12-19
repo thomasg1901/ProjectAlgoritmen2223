@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="fix the delta function">
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Cranes can hand over containers to other cranes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Movement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Movement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
@@ -173,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671400545304</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Cranes can hand over containers to other cranes">
+      <created>1671457014533</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1671457014533</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -200,7 +207,8 @@
     <MESSAGE value="movement of the crane" />
     <MESSAGE value="There is now a collision to be solved" />
     <MESSAGE value="fix the delta function" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix the delta function" />
+    <MESSAGE value="Cranes can hand over containers to other cranes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cranes can hand over containers to other cranes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -215,6 +223,16 @@
           <line>62</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/Terminal.java</url>
+          <line>95</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/Terminal.java</url>
+          <line>92</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
@@ -223,12 +241,17 @@
         <PinnedItemInfo parentTag="main.Terminal" memberName="cranes" />
         <PinnedItemInfo parentTag="main.Slot" memberName="containerStack" />
         <PinnedItemInfo parentTag="main.Container" memberName="id" />
+        <PinnedItemInfo parentTag="main.Movement" memberName="slotsFrom" />
+        <PinnedItemInfo parentTag="main.Crane" memberName="trajectory" />
         <PinnedItemInfo parentTag="main.Slot" memberName="location" />
       </pinned-members>
     </pin-to-top-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="movement.container" />
+        <watch expression="terminal.cranes.get(0).trajectory.entrySet().toArray()[2]" />
+        <watch expression="terminal.cranes.get(0).trajectory.entrySet().toArray()[2]" />
+        <watch expression="movements.get(4).terminal" />
       </configuration>
     </watches-manager>
   </component>

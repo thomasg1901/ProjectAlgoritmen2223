@@ -67,38 +67,39 @@ public class Terminal {
     }
 
     public void moveCrane(Crane crane, Point p, double startTime){
+        Set<Double> times = crane.getTrajectory().keySet();
+        if(!times.isEmpty() && startTime < Collections.max(times)){
+            throw new IllegalArgumentException("Invalid startTime");
+        }
         double timex = ((double) Math.abs(p.getX() - crane.getPosition().getX()))/crane.getSpeedx();
         double timey = ((double) Math.abs(p.getY() - crane.getPosition().getY()))/crane.getSpeedy();
-        double endTime = startTime + Math.max(timex,timey);
+        double endTime = startTime + Math.max(timex, timey);
         // Control movement
-        if(getCollidingCranes(p, crane, 0, startTime, endTime).size()>0)
+        if(getCollidingCranes(p, crane, 1, startTime, endTime).size()>0)
             throw new IllegalArgumentException("Crane comes to close to the other cranes to move to this point");
-
+        TreeMap<Double, Point> trajectory = crane.getTrajectory();
+        trajectory.put(startTime, crane.getPosition());
         crane.setPosition(p);
 
         // Save trajectory
-        TreeMap<Double, Point> trajectory = crane.getTrajectory();
+
         trajectory.put(endTime, p);
         crane.setTrajectory(trajectory);
     }
 
-    public void executeMovements(List<Movement> movements){
-        for (Movement movement : movements) {
+    public void executeMovements(List<Movement> movements, boolean dependent){
+        for (int i = 0; i < movements.size(); i++) {
+            Movement movement = movements.get(i);
             ArrayList<Crane> possibleCranes = getPossibleCranesForMovement(movement);
 
             if(possibleCranes.size() == 0){
-                executeMovements(splitIntoMovements(movement));
+                executeMovements(splitIntoMovements(movement), true);
                 break;
             }
             Crane assignedCrane = assignCrane(possibleCranes);
 
-            Set<Double> times = assignedCrane.getTrajectory().keySet();
 
-            double time = times.isEmpty()?0:Collections.max(times);
-            double timex = ((double) Math.abs(getCenterLocationForCrane(movement.getSlotsTo(), movement.getContainer()).getX() - assignedCrane.getPosition().getX()))/assignedCrane.getSpeedx();
-            double timey = ((double) Math.abs(getCenterLocationForCrane(movement.getSlotsTo(), movement.getContainer()).getY() - assignedCrane.getPosition().getY()))/assignedCrane.getSpeedy();
 
-            double endTime = time+1 + Math.max(timex,timey);
 
             // generate points to move the crane
             List<Point> movementPoints = generatePointsFromMovement(movement, assignedCrane);
@@ -106,13 +107,31 @@ public class Terminal {
             System.out.println(isStackable(movement.getContainer(),movement.getSlotsTo(),this.maxHeight));
 
             for (Point p : movementPoints) {
-                List<Crane> collidingCranes = getCollidingCranes(p,assignedCrane,1, time+1, endTime);
+                Set<Double> times = assignedCrane.getTrajectory().keySet();
+                double time = times.isEmpty()?0:Collections.max(times);
+                if (movement.getReleaseDate() !=0){
+                    time = Math.max(movement.getReleaseDate(), time);
+                }
+
+                double endTime = calculateTimeForCraneMovement(assignedCrane,p, time);
+                if (dependent && i != movements.size()-1){
+                    movements.get(i+1).setReleaseDate(endTime);
+                }
+
+                List<Crane> collidingCranes = getCollidingCranes(p,assignedCrane,1, time, endTime);
                 if(collidingCranes.size() != 0){
-                    moveCranesOutTheWay(p, collidingCranes, time);
+                    moveCranesOutTheWay(p, collidingCranes, endTime);
                 }
                 moveCrane(assignedCrane, p, time);
             }
         }
+    }
+
+    private double calculateTimeForCraneMovement(Crane crane, Point point, double startTime){
+        double timex = (Math.abs(point.getX() - crane.getPosition().getX()))/crane.getSpeedx();
+        double timey = (Math.abs(point.getY() - crane.getPosition().getY()))/crane.getSpeedy();
+
+        return startTime + Math.max(timex,timey);
     }
 
     private List<Movement> splitIntoMovements(Movement movement) {
@@ -254,10 +273,6 @@ public class Terminal {
     private List<Crane> getCollidingCranes(Point destination, Crane movingCrane, int delta, double startTime, double endTime){
         List<Crane> collidingCranes = new ArrayList<>();
         for (Crane crane : cranes) {
-            Map<Double, Point> overlaps = getOverlappingTrajectoryTimes(startTime, endTime, crane);
-            if(!overlaps.isEmpty()){
-                System.out.println("hmm");
-            }
             //Check for overlap between movingcrane.position-->destination & other crane-->his destination
             if (crane.getId() != movingCrane.getId()) {
                 if(movingCrane.getPosition().getX() < destination.getX()){ // move right

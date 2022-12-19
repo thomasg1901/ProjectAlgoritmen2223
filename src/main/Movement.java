@@ -4,6 +4,8 @@ public class Movement {
     private Slot[] slotsTo;
     private Container container;
 
+    private double releaseDate;
+
     private final Terminal terminal;
 
     public Movement(Slot[] slotsFrom, Slot[] slotsTo, Container container, Terminal terminal){
@@ -11,6 +13,15 @@ public class Movement {
         this.slotsTo = slotsTo;
         this.container = container;
         this.terminal = terminal;
+        this.releaseDate = 0;
+    }
+
+    public double getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(double releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public Slot[] getSlotsFrom() {
