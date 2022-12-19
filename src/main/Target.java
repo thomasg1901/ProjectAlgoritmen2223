@@ -60,17 +60,17 @@ public class Target {
                 Set<Container> containers = getContainersAtHeight(initialTerminal.getSlotGrid(), i);
                 Map<Container, List<Slot>> feasibleLeftSlots = new HashMap<>();
                 for(Container container : containers){
-                    feasibleLeftSlots.put(container, getFeasibleLeftSlots(initialTerminal.getSlotGrid(), container));
+                    feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container));
                 }
                 while(!feasibleLeftSlots.isEmpty()){
                     Container minPossibleLocationsContainer = Collections.min(feasibleLeftSlots.entrySet(), comparingInt(entry -> entry.getValue().size())).getKey();
                     Slot leftMostSlot = feasibleLeftSlots.get(minPossibleLocationsContainer).get(0);
                     movements.add(new Movement(minPossibleLocationsContainer.getSlots(),
-                            getSlotsFromLeftMostSlot(leftMostSlot, initialTerminal.getSlotGrid(), minPossibleLocationsContainer.getLength()), minPossibleLocationsContainer, initialTerminal));
+                            initialTerminal.getSlotsFromLeftMostSlot(leftMostSlot, minPossibleLocationsContainer.getLength()), minPossibleLocationsContainer, initialTerminal));
                     feasibleLeftSlots.remove(minPossibleLocationsContainer);
                     for(Container container : feasibleLeftSlots.keySet()){
                         if(feasibleLeftSlots.get(container).contains(leftMostSlot)){
-                            if(!initialTerminal.isStackable(container, getSlotsFromLeftMostSlot(leftMostSlot, initialTerminal.getSlotGrid(), container.getLength()), initialTerminal.getTargetHeight())){
+                            if(!initialTerminal.isStackable(container, initialTerminal.getSlotsFromLeftMostSlot(leftMostSlot, container.getLength()), initialTerminal.getTargetHeight())){
                                 feasibleLeftSlots.get(container).remove(leftMostSlot);
                             }
                         }
@@ -80,29 +80,9 @@ public class Target {
         }
         return movements;
     }
-    public Slot[] getSlotsFromLeftMostSlot(Slot leftMostSlot, Slot[][] slotGrid, int length){
-        Slot[] slots = new Slot[length];
-        slots[0] = slotGrid[(int) leftMostSlot.getLocation().getX()][(int) leftMostSlot.getLocation().getY()];
-        for(int i = 1; i < length; i++){
-            slots[i] = slotGrid[(int) leftMostSlot.getLocation().getX()+i][(int) leftMostSlot.getLocation().getY()];
-        }
-        return slots;
-    }
 
-    public List<Slot> getFeasibleLeftSlots(Slot[][] slotGrid, Container container){
-        List<Slot> feasibleLeftSlots = new ArrayList<>();
-        for (int x = 0; x < slotGrid.length; x++) {
-            for (int y = 0; y < slotGrid[x].length; y++){
-                Slot slot = slotGrid[x][y];
-                if((slot.getLocation().getX() + container.getLength()) <= initialTerminal.getLength()
-                        &&
-                        initialTerminal.isStackable(container, getSlotsFromLeftMostSlot(slot, initialTerminal.getSlotGrid(), container.getLength()), initialTerminal.getTargetHeight())){
-                    feasibleLeftSlots.add(slot);
-                }
-            }
-        }
-        return feasibleLeftSlots;
-    }
+
+
 
     public Set<Container> getContainersAtHeight(Slot[][] slotGrid, int height){
         Set<Container> containersAtHeight = new HashSet<>();

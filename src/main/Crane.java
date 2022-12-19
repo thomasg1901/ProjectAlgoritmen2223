@@ -1,15 +1,12 @@
 package main;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 public class Crane {
 
     private int id;
     private Point position;
-    private HashMap<Double, Point> trajectory;
+    private TreeMap<Double, Point> trajectory;
     private double speedx;
     private double speedy;
 
@@ -21,11 +18,12 @@ public class Crane {
 
     private double yMax;
 
-    public Crane(Point startPoint, double speedx, double speedy, double xMin, double xMax, double yMin, double yMax){
+    public Crane(int id, Point startPoint, double speedx, double speedy, double xMin, double xMax, double yMin, double yMax){
+        this.id = id;
         this.position = startPoint;
         this.speedx = speedx;
         this.speedy = speedy;
-        this.trajectory = new HashMap<Double, Point>();
+        this.trajectory = new TreeMap<Double, Point>();
         this.xMin = xMin;
         this.xMax = xMax;
         this.yMin = yMin;
@@ -33,11 +31,11 @@ public class Crane {
     }
 
 
-    public HashMap<Double, Point> getTrajectory() {
+    public TreeMap<Double, Point> getTrajectory() {
         return trajectory;
     }
 
-    public void setTrajectory(HashMap<Double, Point> trajectory) {
+    public void setTrajectory(TreeMap<Double, Point> trajectory) {
         this.trajectory = trajectory;
     }
 

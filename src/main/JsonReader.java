@@ -53,7 +53,7 @@ public class JsonReader {
 
             List<Crane> cranes = new ArrayList<>();
             for (Map<String, Double> craneMap: (List<Map>)map.get("cranes")){
-                cranes.add(new Crane(new Point(craneMap.get("x").doubleValue(), craneMap.get("y").doubleValue()), craneMap.get("xspeed").doubleValue(), craneMap.get("yspeed").doubleValue(), craneMap.get("xmin").doubleValue(), craneMap.get("xmax").doubleValue(), craneMap.get("ymin").doubleValue(), craneMap.get("ymax").doubleValue()));
+                cranes.add(new Crane(((Double)craneMap.get("id")).intValue(), new Point(craneMap.get("x").doubleValue(), craneMap.get("y").doubleValue()), craneMap.get("xspeed").doubleValue(), craneMap.get("yspeed").doubleValue(), craneMap.get("xmin").doubleValue(), craneMap.get("xmax").doubleValue(), craneMap.get("ymin").doubleValue(), craneMap.get("ymax").doubleValue()));
             }
             int maxHeight = ((Double)map.get("maxheight")).intValue();
             int targetHeight = maxHeight;
