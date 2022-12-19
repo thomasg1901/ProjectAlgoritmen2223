@@ -1,5 +1,7 @@
 {
           "name": "Terminal1",
+  "length": 100,
+  "width": 1,
 			 "maxheight": 3,
 			 "assignments": [
                     {
