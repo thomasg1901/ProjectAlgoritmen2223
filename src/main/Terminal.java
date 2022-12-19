@@ -1,8 +1,5 @@
 package main;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class Terminal {
@@ -74,7 +71,7 @@ public class Terminal {
         double timey = ((double) Math.abs(p.getY() - crane.getPosition().getY()))/crane.getSpeedy();
 
         // Control movement
-        if(willCollideWithOtherCranes(p, crane, 0))
+        if(getCollidingCranes(p, crane, 0).size()>0)
             throw new IllegalArgumentException("Crane comes to close to the other cranes to move to this point");
 
         crane.setPosition(p);
@@ -99,11 +96,16 @@ public class Terminal {
             System.out.println(isStackable(movement.getContainer(),movement.getSlotsTo(),this.maxHeight));
 
             for (Point p : movementPoints) {
-                System.out.println(!willCollideWithOtherCranes(p,assignedCrane,1));
-                if(assignedCrane.getTrajectory().isEmpty())
-                    moveCrane(assignedCrane, p, 0);
-                else
-                    moveCrane(assignedCrane, p, Collections.max(assignedCrane.getTrajectory().keySet()));
+                Set<Double> times = assignedCrane.getTrajectory().keySet();
+                double time = times.isEmpty()?0:Collections.max(times);
+
+                List<Crane> collidingCranes = getCollidingCranes(p,assignedCrane,1);
+                if(collidingCranes.size() != 0){
+                    moveCranesOutTheWay(p, collidingCranes, time);
+                }
+
+
+                moveCrane(assignedCrane, p, time);
             }
         }
     }
@@ -124,6 +126,17 @@ public class Terminal {
         }
 
         return assignedCrane;
+    }
+
+    private void moveCranesOutTheWay(Point collisionPoint, List<Crane> collidingCranes, double time){
+        for (Crane crane: collidingCranes) {
+            Point pointToMoveTo = new Point(collisionPoint.getX() + 2 , crane.getPosition().getY());
+            if(collisionPoint.getX() > crane.getPosition().getX()){ // kraan is links van het punt
+                pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
+            }
+
+            moveCrane(crane,pointToMoveTo,time - Math.abs(crane.getPosition().getX() - pointToMoveTo.getX())/crane.getSpeedx());
+        }
     }
 
     private ArrayList<Crane> getPossibleCranesForMovement(Movement movement){
@@ -150,20 +163,21 @@ public class Terminal {
         return new Point(x,y);
     }
 
-    private boolean willCollideWithOtherCranes(Point desitnation, Crane movingCrane, int delta){
+    private List<Crane> getCollidingCranes(Point desitnation, Crane movingCrane, int delta){
+        List<Crane> collidingCranes = new ArrayList<>();
         for (Crane crane : cranes) {
             if (crane.getId() == movingCrane.getId()) {
                 if(movingCrane.getPosition().getX() < desitnation.getX()){ // move right
                     if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() - delta < desitnation.getX()) // Check if crane comes to close to the other cranes
-                        return true;
+                        collidingCranes.add(crane);
                 }else { // move left
                     if(movingCrane.getPosition().getX() > crane.getPosition().getX()  && desitnation.getX() < crane.getPosition().getX() + delta)
-                        return true;
+                        collidingCranes.add(crane);
                 }
 
             }
         }
-        return false;
+        return collidingCranes;
     }
 
     public void putContainerInSlots(Container container, Slot[] slots, int maxHeight) throws Exception {
