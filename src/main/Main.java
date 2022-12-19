@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        Terminal terminal = JsonReader.readTerminal("./src/main/resources/instances/1t/TerminalA_20_10_3_2_100.json");
-        Terminal targetTerminal = JsonReader.readTerminal("./src/main/resources/instances/1t/targetTerminalA_20_10_3_2_100.json");
+        Terminal terminal = JsonReader.readTerminal("./src/main/resources/instances/3t/TerminalA_20_10_3_2_160.json");
+        Terminal targetTerminal = JsonReader.readTerminal("./src/main/resources/instances/3t/targetTerminalA_20_10_3_2_160.json");
         //terminal = JsonReader.readTerminal("./src/main/resources/examples/terminal22_1_100_1_10.json");
         //targetTerminal = JsonReader.readTerminal("./src/main/resources/examples/terminal22_1_100_1_10target.json");
         Terminal terminalToConvert = JsonReader.readTerminal("./src/main/resources/instances/2mh/MH2Terminal_20_10_3_2_100.json");
         Target fixedTranshipmentsExample = new Target(terminal, targetTerminal);
-        Target terminalConversionExample = new Target(terminalToConvert);
+        //Target terminalConversionExample = new Target(terminalToConvert);
         System.out.println("test");
     }
 }

@@ -85,12 +85,19 @@ public class Terminal {
     public void executeMovements(List<Movement> movements){
         for (Movement movement : movements) {
             ArrayList<Crane> possibleCranes = getPossibleCranesForMovement(movement);
+
+            if(possibleCranes.size() == 0){
+                executeMovements(splitIntoMovements(movement));
+                break;
+            }
             Crane assignedCrane = assignCrane(possibleCranes);
 
             Set<Double> times = assignedCrane.getTrajectory().keySet();
+
             double time = times.isEmpty()?0:Collections.max(times);
             double timex = ((double) Math.abs(getCenterLocationForCrane(movement.getSlotsTo(), movement.getContainer()).getX() - assignedCrane.getPosition().getX()))/assignedCrane.getSpeedx();
             double timey = ((double) Math.abs(getCenterLocationForCrane(movement.getSlotsTo(), movement.getContainer()).getY() - assignedCrane.getPosition().getY()))/assignedCrane.getSpeedy();
+
             double endTime = time+1 + Math.max(timex,timey);
 
             // generate points to move the crane
@@ -106,6 +113,89 @@ public class Terminal {
                 moveCrane(assignedCrane, p, time);
             }
         }
+    }
+
+    private List<Movement> splitIntoMovements(Movement movement) {
+        List<Crane> cranesFrom = getPossibleCranesForMovement(new Movement(movement.getSlotsFrom(), movement.getSlotsFrom(), movement.getContainer(), this));
+        Crane fromCrane = cranesFrom.get(0);
+        Slot[] destination = getCraneTransitionSlots(fromCrane, movement.getSlotsTo(), movement.getContainer());
+        List<Movement> movements = new ArrayList<>();
+        movements.add(new Movement(movement.getSlotsFrom(), destination, movement.getContainer(), this));
+
+        return giveToNextCrane(movements, movement.getSlotsTo());
+    }
+
+    private List<Movement> giveToNextCrane(List<Movement> movements, Slot[] destinationSlots){
+        // Get cranes that can get the container
+        Movement lastMovement = movements.get(movements.size()-1);
+        Slot[] startingPosition = lastMovement.getSlotsTo();
+        if(Arrays.equals(startingPosition, destinationSlots)){
+            return movements;
+        }
+
+        // Assign one that could get (closer) to the end
+        List<Crane> possibleCranes = getPossibleCranesForMovement(new Movement(lastMovement.getSlotsTo(), lastMovement.getSlotsTo(), lastMovement.getContainer(), this));
+        Crane assignedCrane = possibleCranes.get(0);
+        for (Crane possibleCrane:possibleCranes) {
+            Crane closestCrane = getCraneClosestToPoint(assignedCrane, possibleCrane, destinationSlots[0].getLocation());
+            if(!assignedCrane.equals(closestCrane))
+                assignedCrane = closestCrane;
+        }
+
+        // Get the slots for movement
+        Slot[] dropOffSlots = getCraneTransitionSlots(assignedCrane, destinationSlots, lastMovement.getContainer());
+        movements.add(new Movement(lastMovement.getSlotsTo(), dropOffSlots, lastMovement.getContainer(), this));
+
+        return giveToNextCrane(movements, destinationSlots);
+    }
+
+    private Slot[] getCraneTransitionSlots(Crane assignedCrane, Slot[] destinationSlots, Container container){
+        if(craneHasOverlap(assignedCrane, destinationSlots[0].getLocation())){
+            return destinationSlots;
+        }
+
+        List<Crane> cranesWithOverlap = new ArrayList<>();
+
+        // get the zone of possible transition
+        for (Crane crane: cranes) {
+            if (!crane.equals(assignedCrane)){
+                if(getCraneClosestToPoint(crane, assignedCrane, destinationSlots[0].getLocation()).equals(crane) &&
+                        (craneHasOverlap(crane, new Point(assignedCrane.getxMax(),0)) ||  craneHasOverlap(crane, new Point(assignedCrane.getxMin(),0)))){
+                    cranesWithOverlap.add(crane);
+                }
+            }
+        }
+        if(cranesWithOverlap.size() == 0)
+            throw new IllegalArgumentException("No crane can get to this location");
+        Crane crane = cranesWithOverlap.get(0);
+        double xmin = Math.min(crane.getxMax(), assignedCrane.getxMax());
+        double xmax = Math.max(crane.getxMin(), assignedCrane.getxMin());
+
+        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmin),(int) Math.ceil(xmax)).get(0);
+        return getSlotsFromLeftMostSlot(leftMostSlot, container.getLength());
+    }
+
+    private Crane getCraneClosestToPoint(Crane crane1, Crane crane2, Point destination){
+        if(craneHasOverlap(crane1, destination))
+            return crane1;
+        if (craneHasOverlap(crane2, destination))
+            return crane2;
+
+        double diff1 = Math.abs(destination.getX() - crane1.getxMin());
+        double diff2 = Math.abs(destination.getX() - crane2.getxMin());
+
+        if(diff1 > diff2)
+            return crane2;
+
+        return crane1;
+    }
+
+    private boolean craneHasOverlap(Crane crane, Point destination){
+        if((destination.getX() >= crane.getxMin()) && (destination.getX() <= crane.getxMax())){
+            return true;
+        }
+
+        return false;
     }
 
     private List<Point> generatePointsFromMovement(Movement movement, Crane crane){
@@ -161,9 +251,6 @@ public class Terminal {
         return new Point(x,y);
     }
 
-//    C1:   @t5=(0,8) --> @t9=(7,9)
-//    C2: 	@t4=(0,7) --> @t6=(6,4)
-//          @t7=(6,4) --> @t9=(7,8)
     private List<Crane> getCollidingCranes(Point destination, Crane movingCrane, int delta, double startTime, double endTime){
         List<Crane> collidingCranes = new ArrayList<>();
         for (Crane crane : cranes) {
@@ -190,9 +277,9 @@ public class Terminal {
         return false;
     }
 
-    public List<Slot> getFeasibleLeftSlots(Container container){
+    public List<Slot> getFeasibleLeftSlots(Container container,int xMax, int xMin){
         List<Slot> feasibleLeftSlots = new ArrayList<>();
-        for (int x = 0; x < slotGrid.length; x++) {
+        for (int x = xMin; x < xMax; x++) {
             for (int y = 0; y < slotGrid[x].length; y++){
                 Slot slot = slotGrid[x][y];
                 if((slot.getLocation().getX() + container.getLength()) <= length

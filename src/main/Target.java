@@ -60,7 +60,7 @@ public class Target {
                 Set<Container> containers = getContainersAtHeight(initialTerminal.getSlotGrid(), i);
                 Map<Container, List<Slot>> feasibleLeftSlots = new HashMap<>();
                 for(Container container : containers){
-                    feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container));
+                    feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container, 0, initialTerminal.getWidth()));
                 }
                 while(!feasibleLeftSlots.isEmpty()){
                     Container minPossibleLocationsContainer = Collections.min(feasibleLeftSlots.entrySet(), comparingInt(entry -> entry.getValue().size())).getKey();
