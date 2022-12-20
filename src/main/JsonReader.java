@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class JsonReader {
-    public static Terminal readTerminal(String filePath){
+    public static Terminal readInitialTerminal(String filePath){
         try {
             // create Gson instance
             Gson gson = new Gson();
@@ -60,13 +60,45 @@ public class JsonReader {
             if(map.containsKey("targetheight")){
                 targetHeight = ((Double)map.get("targetheight")).intValue();
             }
-            Terminal terminal = new Terminal(map.get("name").toString(), containers, slotGrid, assignments.toArray(new Assignment[0]), cranes, maxHeight, targetHeight, ((Double)map.get("width")).intValue(), ((Double)map.get("length")).intValue());
+            Terminal terminal = new Terminal(map.get("name").toString(), containers, slotLocations, slotGrid, assignments.toArray(new Assignment[0]), cranes, maxHeight, targetHeight, ((Double)map.get("width")).intValue(), ((Double)map.get("length")).intValue());
             for(Container container : terminal.getContainers()){
-                terminal.putContainerInSlots(container, container.getSlots(), maxHeight);
+                terminal.initializeSlots(container, container.getSlots());
             }
             reader.close();
             return terminal;
         } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Assignment[] readAssignments(String filePath, Terminal initialTerminal){
+        try {
+            // create Gson instance
+            Gson gson = new Gson();
+
+            // create a reader
+            Reader reader = Files.newBufferedReader(Paths.get(filePath), StandardCharsets.UTF_8);
+
+            // convert JSON file to map
+            Map<?, ?> map = gson.fromJson(reader, Map.class);
+
+            List<Assignment> assignments = new ArrayList<>();
+
+            for (Map<String, ?> assignmentMap : (List<Map>)map.get("assignments")) {
+                Container assignmentContainer = initialTerminal.getContainers().stream().filter(container -> container.getId() == ((Double)assignmentMap.get("container_id")).intValue()).collect(Collectors.toList()).get(0);
+                Slot[] assignmentSlots = new Slot[assignmentContainer.getLength()];
+                int leftMostSlotId = ((Double)assignmentMap.get("slot_id")).intValue();
+                Point leftMostSlotLocation = initialTerminal.getSlotLocations().get(leftMostSlotId);
+                assignmentSlots[0] = initialTerminal.getSlotGrid()[(int) leftMostSlotLocation.getX()][(int) leftMostSlotLocation.getY()];
+                for(int i = 1; i < assignmentContainer.getLength(); i++){
+                    assignmentSlots[i] = initialTerminal.getSlotGrid()[(int) leftMostSlotLocation.getX()+i][(int) leftMostSlotLocation.getY()];
+                }
+                assignments.add(new Assignment(assignmentContainer, assignmentSlots));
+            }
+            reader.close();
+            return assignments.toArray(new Assignment[0]);
+        } catch (Exception ex){
             ex.printStackTrace();
         }
         return null;

@@ -21,6 +21,11 @@ public class Movement {
         this.releaseDate = 0;
         this.startTime = -1;
         this.endTime = -1;
+        this.dependentPrevMovement = null;
+    }
+
+    public void setDependentPrevMovement(Movement dependentPrevMovement) {
+        this.dependentPrevMovement = dependentPrevMovement;
     }
 
     public double getStartTime() {

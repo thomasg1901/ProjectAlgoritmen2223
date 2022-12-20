@@ -13,14 +13,14 @@ import java.util.Map;
 
 public class Target {
     Terminal initialTerminal;
-    Terminal finalTerminal;
+    Assignment[] targetAssignments;
     private int maxHeight;
     private int targetHeight;
     private List<Movement> moveAssignments;
 
-    public Target(Terminal initialTerminal, Terminal finalTerminal) {
+    public Target(Terminal initialTerminal, Assignment[] targetAssignments) {
         this.initialTerminal = initialTerminal;
-        this.finalTerminal = finalTerminal;
+        this.targetAssignments = targetAssignments;
         this.maxHeight = initialTerminal.getMaxHeight();
         this.moveAssignments = calculateToFinalTerminal();
         initialTerminal.executeMovements(moveAssignments);
@@ -36,7 +36,7 @@ public class Target {
     private List<Movement> calculateToFinalTerminal(){
         List<Movement> movements = new ArrayList<>();
         Assignment[] initialAssignments = initialTerminal.getAssignments();
-        Assignment[] finalAssignments = finalTerminal.getAssignments();
+        Assignment[] finalAssignments = targetAssignments;
 
         for (Assignment assignment: finalAssignments) {
             if(Arrays.stream(initialAssignments).noneMatch(assignment::equals)){
@@ -107,14 +107,6 @@ public class Target {
             }
         }
         return containersAtHeight;
-    }
-
-    public Terminal getFinalTerminal() {
-        return finalTerminal;
-    }
-
-    public void setFinalTerminal(Terminal finalTerminal) {
-        this.finalTerminal = finalTerminal;
     }
 
     public int getMaxHeight() {
