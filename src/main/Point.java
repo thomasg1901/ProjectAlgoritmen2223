@@ -27,6 +27,10 @@ public class Point {
         this.y = y;
     }
 
+    public double distance(Point p2){
+        return Math.abs(this.getX() - p2.getX()) + Math.abs(this.getY() - p2.getY());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
