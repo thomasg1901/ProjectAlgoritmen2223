@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="changes in movement to indicate the times it gets executed">
-      <change beforePath="$PROJECT_DIR$/src/main/Movement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Movement.java" afterDir="false" />
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="name change">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671535659885</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="name change">
+      <created>1671535698875</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1671535698875</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -226,7 +234,8 @@
     <MESSAGE value="Cranes can hand over containers to other cranes" />
     <MESSAGE value="Issue where overhanding the cranes gave a problem with the timing" />
     <MESSAGE value="changes in movement to indicate the times it gets executed" />
-    <option name="LAST_COMMIT_MESSAGE" value="changes in movement to indicate the times it gets executed" />
+    <MESSAGE value="name change" />
+    <option name="LAST_COMMIT_MESSAGE" value="name change" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

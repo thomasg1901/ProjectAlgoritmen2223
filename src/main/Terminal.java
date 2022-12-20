@@ -102,6 +102,18 @@ public class Terminal {
 
     }
 
+    private boolean isMovementFeasible(Movement movement){
+        return isContainerMovable(movement.getContainer()) && isStackable(movement.getContainer(), movement.getSlotsTo(), this.maxHeight);
+    }
+
+    private void executeMovement(Movement movement, Crane crane){
+        // 1 Verplaats kraan naar container locatie
+        // 2 verwijder container uit locatie
+        // 3 verplaats kraan naar end slot
+        // 4 plaats contianer op end slot
+        // 5 als end slot in overlap zone verplaats kraan eruit
+    }
+
     private void assignMovementsToCranes(List<Movement> movements){
         for (int i = 0; i < movements.size(); i++) {
             Movement movement = movements.get(i);
