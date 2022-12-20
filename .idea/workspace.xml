@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Cranes can hand over containers to other cranes">
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Issue where overhanding the cranes gave a problem with the timing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Crane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Crane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Movement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Movement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Point.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
@@ -53,6 +55,11 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\School stuff\Masterjaar\ProjectAlgoritmen2223\src\main\resources\instances\5t" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main.Main" />
@@ -180,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671457014533</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Issue where overhanding the cranes gave a problem with the timing">
+      <created>1671467221028</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1671467221028</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -208,7 +222,8 @@
     <MESSAGE value="There is now a collision to be solved" />
     <MESSAGE value="fix the delta function" />
     <MESSAGE value="Cranes can hand over containers to other cranes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cranes can hand over containers to other cranes" />
+    <MESSAGE value="Issue where overhanding the cranes gave a problem with the timing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Issue where overhanding the cranes gave a problem with the timing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -222,16 +237,6 @@
           <url>file://$PROJECT_DIR$/src/main/Target.java</url>
           <line>62</line>
           <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Terminal.java</url>
-          <line>95</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Terminal.java</url>
-          <line>92</line>
-          <option name="timeStamp" value="37" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -252,6 +257,7 @@
         <watch expression="terminal.cranes.get(0).trajectory.entrySet().toArray()[2]" />
         <watch expression="terminal.cranes.get(0).trajectory.entrySet().toArray()[2]" />
         <watch expression="movements.get(4).terminal" />
+        <watch expression="((Point)((Slot[])((Movement)((java.util.ArrayList)((Crane)((ArrayList)((Terminal)this).cranes).get(0)).assignedMovements).get(0)).slotsFrom)[0].location).y" custom="main.Terminal,main.Crane,main.Slot[],main.Movement,main.Point,java.util.ArrayList" />
       </configuration>
     </watches-manager>
   </component>

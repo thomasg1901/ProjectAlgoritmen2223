@@ -69,14 +69,16 @@ public class Terminal {
     public void moveCrane(Crane crane, Point p, double startTime){
         Set<Double> times = crane.getTrajectory().keySet();
         if(!times.isEmpty() && startTime < Collections.max(times)){
-            throw new IllegalArgumentException("Invalid startTime");
+            //throw new IllegalArgumentException("Invalid startTime");
         }
         double timex = ((double) Math.abs(p.getX() - crane.getPosition().getX()))/crane.getSpeedx();
         double timey = ((double) Math.abs(p.getY() - crane.getPosition().getY()))/crane.getSpeedy();
         double endTime = startTime + Math.max(timex, timey);
         // Control movement
-        if(getCollidingCranes(p, crane, 1, startTime, endTime).size()>0)
+        if(getCollidingCranes(p, crane, 1, startTime, endTime).size()>0){
             throw new IllegalArgumentException("Crane comes to close to the other cranes to move to this point");
+        }
+
         TreeMap<Double, Point> trajectory = crane.getTrajectory();
         trajectory.put(startTime, crane.getPosition());
         crane.setPosition(p);
@@ -87,39 +89,33 @@ public class Terminal {
         crane.setTrajectory(trajectory);
     }
 
-    public void executeMovements(List<Movement> movements, boolean dependent){
+    public void executeMovements(List<Movement> movements){
+        assignMovementsToCranes(movements);
+
+        for (Crane crane: cranes){
+            for (Movement movement:crane.getAssignedMovements()) {
+                System.out.println("Move crane with id: "+ crane.getId()+" to location " + movement.getSlotsFrom()[0].getLocation().toString()+ " to get container" + movement.getContainer().getId()+ " and place it at "+ movement.getSlotsTo()[0].getLocation());
+                System.out.println("the container is grepable: "+isContainerMovable(movement.getContainer()));
+                System.out.println("the container is placeable: "+isStackable(movement.getContainer(), movement.getSlotsTo(), this.maxHeight));
+            }
+        }
+
+    }
+
+    private void assignMovementsToCranes(List<Movement> movements){
         for (int i = 0; i < movements.size(); i++) {
             Movement movement = movements.get(i);
             ArrayList<Crane> possibleCranes = getPossibleCranesForMovement(movement);
-
             if(possibleCranes.size() == 0){
-                executeMovements(splitIntoMovements(movement), true);
-                break;
-            }
-            Crane assignedCrane = assignCrane(possibleCranes);
-
-            // generate points to move the crane
-            List<Point> movementPoints = generatePointsFromMovement(movement, assignedCrane);
-            System.out.println(possibleCranes.size());
-            System.out.println(isStackable(movement.getContainer(),movement.getSlotsTo(),this.maxHeight));
-
-            for (Point p : movementPoints) {
-                Set<Double> times = assignedCrane.getTrajectory().keySet();
-                double time = times.isEmpty()?0:Collections.max(times);
-                if (movement.getReleaseDate() !=0){
-                    time = Math.max(movement.getReleaseDate(), time);
+                List<Movement> overhandingMovements = splitIntoMovements(movement);
+                for (Movement partialMovement: overhandingMovements) {
+                    possibleCranes = getPossibleCranesForMovement(partialMovement);
+                    Crane assignedCrane = assignCrane(possibleCranes);
+                    assignedCrane.addMovement(partialMovement);
                 }
-
-                double endTime = calculateTimeForCraneMovement(assignedCrane,p, time);
-                if (dependent && i != movements.size()-1){
-                    movements.get(i+1).setReleaseDate(endTime);
-                }
-
-                List<Crane> collidingCranes = getCollidingCranes(p,assignedCrane,1, time, endTime);
-                if(collidingCranes.size() != 0){
-                    moveCranesOutTheWay(p, collidingCranes, endTime);
-                }
-                moveCrane(assignedCrane, p, time);
+            }else{
+                Crane assignedCrane = assignCrane(possibleCranes);
+                assignedCrane.addMovement(movement);
             }
         }
     }
@@ -223,7 +219,7 @@ public class Terminal {
     private Crane assignCrane(List<Crane> cranes){
         Crane assignedCrane = null;
         for (Crane crane : cranes) {
-            if(assignedCrane == null || assignedCrane.getTrajectory().size() > crane.getTrajectory().size())
+            if(assignedCrane == null || assignedCrane.getAssignedMovements().size() > crane.getAssignedMovements().size())
                 assignedCrane = crane;
         }
 
@@ -391,7 +387,6 @@ public class Terminal {
         }
         return isMovable;
     }
-
 
     public boolean isStackable(Container container, Slot[] slots, int maxHeight){
         // Check 1: verify if all container units are on the same height

@@ -1,5 +1,4 @@
 package main;
-import java.awt.*;
 import java.util.*;
 
 public class Crane {
@@ -7,6 +6,8 @@ public class Crane {
     private int id;
     private Point position;
     private TreeMap<Double, Point> trajectory;
+
+    private ArrayList<Movement> assignedMovements;
     private double speedx;
     private double speedy;
 
@@ -28,8 +29,16 @@ public class Crane {
         this.xMax = xMax;
         this.yMin = yMin;
         this.yMax = yMax;
+        this.assignedMovements = new ArrayList<>();
     }
 
+    public ArrayList<Movement> getAssignedMovements() {
+        return assignedMovements;
+    }
+
+    public void addMovement(Movement assignedMovement) {
+        this.assignedMovements.add(assignedMovement);
+    }
 
     public TreeMap<Double, Point> getTrajectory() {
         return trajectory;

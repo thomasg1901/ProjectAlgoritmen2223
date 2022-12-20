@@ -23,7 +23,7 @@ public class Target {
         this.finalTerminal = finalTerminal;
         this.maxHeight = initialTerminal.getMaxHeight();
         this.moveAssignments = calculateToFinalTerminal();
-        initialTerminal.executeMovements(moveAssignments, false);
+        initialTerminal.executeMovements(moveAssignments);
     }
 
     public Target(Terminal initialTerminal){

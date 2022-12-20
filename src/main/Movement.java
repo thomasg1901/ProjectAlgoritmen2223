@@ -4,7 +4,12 @@ public class Movement {
     private Slot[] slotsTo;
     private Container container;
 
+    private double startTime;
+    private double endTime;
+
     private double releaseDate;
+
+    private Movement linkedMovement;
 
     private final Terminal terminal;
 
@@ -14,6 +19,24 @@ public class Movement {
         this.container = container;
         this.terminal = terminal;
         this.releaseDate = 0;
+        this.startTime = -1;
+        this.endTime = -1;
+    }
+
+    public double getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(double startTime) {
+        this.startTime = startTime;
+    }
+
+    public double getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(double endTime) {
+        this.endTime = endTime;
     }
 
     public double getReleaseDate() {
