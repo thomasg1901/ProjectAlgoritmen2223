@@ -81,8 +81,36 @@ public class Target {
         return movements;
     }
 
+    private Slot getClosestFeasibleLeftSlot(Container container, List<Slot> feasibleLeftSlots){
+        Point initialContainerCenter = initialTerminal.getCenterLocationForCrane(container.getSlots(), container);
+        Slot closestSlot = null;
+        double minDistance = Double.MAX_VALUE;
+        for (Slot slot : feasibleLeftSlots) {
+            Point slotLocation = slot.getLocation();
+            double distance = initialContainerCenter.distance(slotLocation);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestSlot = slot;
+            }
+        }
+        return closestSlot;
+    }
 
-
+    private void test(List<Crane> allCranes){
+        boolean movementsLeft = true;
+        while (movementsLeft) {
+            movementsLeft = false;
+            for (Crane crane : allCranes) {
+                List<Movement> movements = crane.getAssignedMovements();
+                if (!movements.isEmpty()) {
+                    Movement movement = movements.get(0);
+//                    movement.execute();
+                    movements.remove(0);
+                    movementsLeft = true;
+                }
+            }
+        }
+    }
 
     public Set<Container> getContainersAtHeight(Slot[][] slotGrid, int height){
         Set<Container> containersAtHeight = new HashSet<>();

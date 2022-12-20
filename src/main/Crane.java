@@ -1,5 +1,6 @@
 package main;
 import java.util.*;
+import java.util.List;
 
 public class Crane {
 
@@ -8,8 +9,8 @@ public class Crane {
     private TreeMap<Double, Point> trajectory;
 
     private ArrayList<Movement> assignedMovements;
-    private double speedx;
-    private double speedy;
+    private double speedX;
+    private double speedY;
 
     private double xMin;
 
@@ -19,11 +20,11 @@ public class Crane {
 
     private double yMax;
 
-    public Crane(int id, Point startPoint, double speedx, double speedy, double xMin, double xMax, double yMin, double yMax){
+    public Crane(int id, Point startPoint, double speedX, double speedY, double xMin, double xMax, double yMin, double yMax){
         this.id = id;
         this.position = startPoint;
-        this.speedx = speedx;
-        this.speedy = speedy;
+        this.speedX = speedX;
+        this.speedY = speedY;
         this.trajectory = new TreeMap<Double, Point>();
         this.xMin = xMin;
         this.xMax = xMax;
@@ -56,20 +57,20 @@ public class Crane {
         this.position = position;
     }
 
-    public double getSpeedx() {
-        return speedx;
+    public double getSpeedX() {
+        return speedX;
     }
 
-    public void setSpeedx(double speedx) {
-        this.speedx = speedx;
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
     }
 
-    public double getSpeedy() {
-        return speedy;
+    public double getSpeedY() {
+        return speedY;
     }
 
-    public void setSpeedy(double speedy) {
-        this.speedy = speedy;
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
     }
 
     public int getId() {
@@ -110,5 +111,9 @@ public class Crane {
 
     public void setyMax(double yMax) {
         this.yMax = yMax;
+    }
+
+    public void removeNextMovement(){
+        this.assignedMovements.remove(0);
     }
 }
