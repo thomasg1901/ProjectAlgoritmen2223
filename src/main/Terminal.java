@@ -69,6 +69,7 @@ public class Terminal {
     }
 
     public void moveCrane(Crane crane, Point p, double startTime){
+
         Set<Double> times = crane.getTrajectory().keySet();
         if(!times.isEmpty() && startTime < Collections.max(times)){
             throw new IllegalArgumentException("Invalid startTime");
@@ -77,7 +78,7 @@ public class Terminal {
         double timey = ((double) Math.abs(p.getY() - crane.getPosition().getY()))/crane.getSpeedY();
         double endTime = startTime + Math.max(timex, timey);
 
-
+        System.out.println("Move crane with id: "+ crane.getId()+" from "+ crane.getPosition()+ " to location " + p.toString() + " starting at "+ startTime + " ending at " + endTime);
         lastMovingtime = Math.max(endTime, lastMovingtime);
 
         // Control movement
@@ -142,7 +143,7 @@ public class Terminal {
         // 3 verplaats kraan naar end slot
 
         // 5 als end slot in overlap zone verplaats kraan eruit
-
+        System.out.println("\n");
     }
 
     private void assignMovementsToCranes(List<Movement> movements){
@@ -155,6 +156,7 @@ public class Terminal {
                     possibleCranes = getPossibleCranesForMovement(partialMovement);
                     Crane assignedCrane = assignCrane(possibleCranes);
                     assignedCrane.addMovement(partialMovement);
+                    System.out.println("Dubble movement for container with id: "+ movement.getContainer().getId());
                 }
             }else{
                 Crane assignedCrane = assignCrane(possibleCranes);
@@ -423,13 +425,11 @@ public class Terminal {
         if(slots.length != container.getLength()){
             throw new Exception();
         }
-        if(isStackable(container, slots, maxHeight) && isContainerMovable(container)){
+        if(isStackable(container, slots, maxHeight)){
             container.setSlots(slots);
             for(Slot slot : slots){
                 slot.stackContainer(container);
             }
-        }else{
-            throw new Exception();
         }
     }
 
@@ -442,6 +442,7 @@ public class Terminal {
 
     public boolean isContainerMovable(Container container){
         Slot[] containerSlots = container.getSlots();
+
 
         boolean isMovable = true;
         for(Slot containerSlot : containerSlots){
