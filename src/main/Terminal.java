@@ -142,15 +142,17 @@ public class Terminal {
         // 1 Verplaats kraan naar container locatie
         moveCrane(crane, craneMovingPoints.get(0), lastMovingtime);
         // 2 verwijder container uit locatie (& plaats in de nieuwe)
+
+        // 3 verplaats kraan naar end slot
+        moveCrane(crane, craneMovingPoints.get(1), lastMovingtime);
+
+        // 4 plaats container op end slot
         try {
             transferContainerToSlots(movement.getContainer(),movement.getSlotsTo(),maxHeight);
         }catch (Exception e){
             System.out.println("Could not place container");
         }
 
-        moveCrane(crane, craneMovingPoints.get(1), lastMovingtime);
-        // 3 verplaats kraan naar end slot
-        // 4 plaats container op end slot
         // 5 als end slot in overlap zone verplaats kraan eruit
         System.out.println("\n");
     }
@@ -219,7 +221,7 @@ public class Terminal {
     }
 
     private Slot[] getCraneTransitionSlots(Crane assignedCrane, Slot[] destinationSlots, Container container) throws Exception {
-        if(craneHasOverlap(assignedCrane, destinationSlots[0].getLocation())){
+        if(craneHasOverlap(assignedCrane, getCenterLocationForCrane(destinationSlots, container))){
             return destinationSlots;
         }
         List<Crane> cranesWithOverlap = new ArrayList<>();
@@ -235,9 +237,9 @@ public class Terminal {
         if(cranesWithOverlap.size() == 0)
             throw new IllegalArgumentException("No crane can get to this location");
         Crane crane = cranesWithOverlap.get(0);
-        double xmin = Math.min(crane.getxMax(), assignedCrane.getxMax());
-        double xmax = Math.max(crane.getxMin(), assignedCrane.getxMin());
-        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmin),(int) Math.ceil(xmax), crane.getAssignedMovements()).get(0);
+        double xmax = Math.min(crane.getxMax(), assignedCrane.getxMax()) - container.getLength()/2.0;
+        double xmin = Math.max(crane.getxMin(), assignedCrane.getxMin());
+        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmax),(int) Math.ceil(xmin), crane.getAssignedMovements()).get(0);
         return getSlotsFromLeftMostSlot(leftMostSlot, container.getLength());
     }
 
@@ -288,7 +290,10 @@ public class Terminal {
             if(crane.getId() == 0){
                 pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
             }
-            if(collisionPoint.getX() > crane.getxMax()){ // kraan is links van het punt
+            // TODO Check if it's closer to the max then the min
+            // If its closer to the min then the max move to the right
+            // If its closer to the max then move to the left
+            if(crane.getId() == 0){ // kraan is links van het punt
                 pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
             }
 

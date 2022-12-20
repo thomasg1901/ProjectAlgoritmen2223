@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="[FAULTY] some errors">
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="More prints of what happends">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
@@ -218,7 +218,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671541515655</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="More prints of what happends">
+      <created>1671544720936</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1671544720936</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -251,25 +258,16 @@
     <MESSAGE value="name change" />
     <MESSAGE value="Idea on how to execute a movement" />
     <MESSAGE value="[FAULTY] some errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="[FAULTY] some errors" />
+    <MESSAGE value="More prints of what happends" />
+    <option name="LAST_COMMIT_MESSAGE" value="More prints of what happends" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/Target.java</url>
-          <line>62</line>
+          <line>88</line>
           <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Main.java</url>
-          <line>18</line>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Terminal.java</url>
-          <line>104</line>
-          <option name="timeStamp" value="42" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -279,6 +277,8 @@
         <PinnedItemInfo parentTag="main.Terminal" memberName="cranes" />
         <PinnedItemInfo parentTag="main.Container" memberName="length" />
         <PinnedItemInfo parentTag="main.Container" memberName="id" />
+        <PinnedItemInfo parentTag="main.Slot" memberName="id" />
+        <PinnedItemInfo parentTag="main.Container" memberName="slots" />
         <PinnedItemInfo parentTag="main.Movement" memberName="slotsFrom" />
         <PinnedItemInfo parentTag="main.Crane" memberName="trajectory" />
         <PinnedItemInfo parentTag="main.Slot" memberName="location" />
