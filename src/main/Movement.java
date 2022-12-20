@@ -9,7 +9,7 @@ public class Movement {
 
     private double releaseDate;
 
-    private Movement linkedMovement;
+    private Movement dependentPrevMovement;
 
     private final Terminal terminal;
 
