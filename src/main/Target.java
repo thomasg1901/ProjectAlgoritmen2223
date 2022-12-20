@@ -64,7 +64,7 @@ public class Target {
                 }
                 while(!feasibleLeftSlots.isEmpty()){
                     Container minPossibleLocationsContainer = Collections.min(feasibleLeftSlots.entrySet(), comparingInt(entry -> entry.getValue().size())).getKey();
-                    Slot leftMostSlot = feasibleLeftSlots.get(minPossibleLocationsContainer).get(0);
+                    Slot leftMostSlot = getClosestFeasibleLeftSlot(minPossibleLocationsContainer, feasibleLeftSlots.get(minPossibleLocationsContainer));
                     movements.add(new Movement(minPossibleLocationsContainer.getSlots(),
                             initialTerminal.getSlotsFromLeftMostSlot(leftMostSlot, minPossibleLocationsContainer.getLength()), minPossibleLocationsContainer, initialTerminal));
                     feasibleLeftSlots.remove(minPossibleLocationsContainer);
