@@ -1,5 +1,7 @@
 package main;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Terminal {
@@ -19,7 +21,9 @@ public class Terminal {
     private final int length;
     private double lastMovingtime;
 
-    public Terminal(String name, List<Container> containers, Slot[][] slotGrid, Assignment[] assignments, List<Crane> cranes, int maxHeight, int targetHeight, int width, int length) {
+    private Map<Integer , Point> slotLocations;
+
+    public Terminal(String name, List<Container> containers, Map<Integer, Point> slotLocations, Slot[][] slotGrid, Assignment[] assignments, List<Crane> cranes, int maxHeight, int targetHeight, int width, int length) {
         this.name = name;
         this.containers = containers;
         this.slotGrid = slotGrid;
@@ -30,6 +34,11 @@ public class Terminal {
         this.length = length;
         this.targetHeight = targetHeight;
         this.lastMovingtime = 0;
+        this.slotLocations = slotLocations;
+    }
+
+    public Map<Integer, Point> getSlotLocations() {
+        return slotLocations;
     }
 
     public List<Container> getContainers() {
@@ -98,7 +107,7 @@ public class Terminal {
         crane.setTrajectory(trajectory);
     }
 
-    public void executeMovements(List<Movement> movements){
+    public void executeMovements(List<Movement> movements) throws Exception {
         assignMovementsToCranes(movements);
         boolean movementsLeft = true;
         while (movementsLeft) {
@@ -134,19 +143,19 @@ public class Terminal {
         moveCrane(crane, craneMovingPoints.get(0), lastMovingtime);
         // 2 verwijder container uit locatie (& plaats in de nieuwe)
         try {
-            putContainerInSlots(movement.getContainer(),movement.getSlotsTo(),maxHeight);
+            transferContainerToSlots(movement.getContainer(),movement.getSlotsTo(),maxHeight);
         }catch (Exception e){
             System.out.println("Could not place container");
         }
 
         moveCrane(crane, craneMovingPoints.get(1), lastMovingtime);
         // 3 verplaats kraan naar end slot
-
+        // 4 plaats container op end slot
         // 5 als end slot in overlap zone verplaats kraan eruit
         System.out.println("\n");
     }
 
-    private void assignMovementsToCranes(List<Movement> movements){
+    private void assignMovementsToCranes(List<Movement> movements) throws Exception {
         for (int i = 0; i < movements.size(); i++) {
             Movement movement = movements.get(i);
             ArrayList<Crane> possibleCranes = getPossibleCranesForMovement(movement);
@@ -172,17 +181,18 @@ public class Terminal {
         return startTime + Math.max(timex,timey);
     }
 
-    private List<Movement> splitIntoMovements(Movement movement) {
+    private List<Movement> splitIntoMovements(Movement movement) throws Exception {
         List<Crane> cranesFrom = getPossibleCranesForMovement(new Movement(movement.getSlotsFrom(), movement.getSlotsFrom(), movement.getContainer(), this));
         Crane fromCrane = cranesFrom.get(0);
         Slot[] destination = getCraneTransitionSlots(fromCrane, movement.getSlotsTo(), movement.getContainer());
         List<Movement> movements = new ArrayList<>();
-        movements.add(new Movement(movement.getSlotsFrom(), destination, movement.getContainer(), this));
+        Movement partialMovement = new Movement(movement.getSlotsFrom(), destination, movement.getContainer(), this);
+        movements.add(partialMovement);
 
         return giveToNextCrane(movements, movement.getSlotsTo());
     }
 
-    private List<Movement> giveToNextCrane(List<Movement> movements, Slot[] destinationSlots){
+    private List<Movement> giveToNextCrane(List<Movement> movements, Slot[] destinationSlots) throws Exception {
         // Get cranes that can get the container
         Movement lastMovement = movements.get(movements.size()-1);
         Slot[] startingPosition = lastMovement.getSlotsTo();
@@ -201,12 +211,14 @@ public class Terminal {
 
         // Get the slots for movement
         Slot[] dropOffSlots = getCraneTransitionSlots(assignedCrane, destinationSlots, lastMovement.getContainer());
-        movements.add(new Movement(lastMovement.getSlotsTo(), dropOffSlots, lastMovement.getContainer(), this));
+        Movement partialMovement = new Movement(lastMovement.getSlotsTo(), dropOffSlots, lastMovement.getContainer(), this);
+        partialMovement.setDependentPrevMovement(lastMovement);
+        movements.add(partialMovement);
 
         return giveToNextCrane(movements, destinationSlots);
     }
 
-    private Slot[] getCraneTransitionSlots(Crane assignedCrane, Slot[] destinationSlots, Container container){
+    private Slot[] getCraneTransitionSlots(Crane assignedCrane, Slot[] destinationSlots, Container container) throws Exception {
         if(craneHasOverlap(assignedCrane, destinationSlots[0].getLocation())){
             return destinationSlots;
         }
@@ -225,8 +237,7 @@ public class Terminal {
         Crane crane = cranesWithOverlap.get(0);
         double xmin = Math.min(crane.getxMax(), assignedCrane.getxMax());
         double xmax = Math.max(crane.getxMin(), assignedCrane.getxMin());
-
-        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmin),(int) Math.ceil(xmax)).get(0);
+        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmin),(int) Math.ceil(xmax), crane.getAssignedMovements()).get(0);
         return getSlotsFromLeftMostSlot(leftMostSlot, container.getLength());
     }
 
@@ -274,6 +285,9 @@ public class Terminal {
     private void moveCranesOutTheWay(Point collisionPoint, List<Crane> collidingCranes){
         for (Crane crane: collidingCranes) {
             Point pointToMoveTo = new Point(collisionPoint.getX() + 2 , crane.getPosition().getY());
+            if(crane.getId() == 0){
+                pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
+            }
             if(collisionPoint.getX() > crane.getxMax()){ // kraan is links van het punt
                 pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
             }
@@ -383,17 +397,22 @@ public class Terminal {
         return begin1.getX() + delta < end2.getX() && begin2.getX() + delta < end1.getX();
     }
 
-    public List<Slot> getFeasibleLeftSlots(Container container,int xMax, int xMin){
+    public List<Slot> getFeasibleLeftSlots(Container container,int xMax, int xMin, List<Movement> ambetanteMovements) throws Exception {
         List<Slot> feasibleLeftSlots = new ArrayList<>();
+        List<Slot> allInterferingSlots = ambetanteMovements.stream().map(Movement::getSlotsTo).flatMap(Stream::of).toList();
         for (int x = xMin; x < xMax; x++) {
             for (int y = 0; y < slotGrid[x].length; y++){
                 Slot slot = slotGrid[x][y];
                 if((slot.getLocation().getX() + container.getLength()) <= length
                         &&
-                        isStackable(container, getSlotsFromLeftMostSlot(slot, container.getLength()), targetHeight)){
+                        isStackable(container, getSlotsFromLeftMostSlot(slot, container.getLength()), targetHeight)
+                && !allInterferingSlots.contains(slot)){
                     feasibleLeftSlots.add(slot);
                 }
             }
+        }
+        if(feasibleLeftSlots.size() == 0){
+            throw new Exception();
         }
         return feasibleLeftSlots;
     }
@@ -409,27 +428,44 @@ public class Terminal {
 
     private TreeMap<Double, Point> getOverlappingTrajectoryTimes(double startTime, double endTime, Crane crane){
         TreeMap<Double, Point> overlappingTrajectory = new TreeMap<>();
-        for(Double startKey : crane.getTrajectory().keySet()){
-            if(crane.getTrajectory().higherKey(startKey) != null){
-                Double endKey = crane.getTrajectory().higherKey(startKey);
-                if(startTime < endKey && startKey < endTime){
-                    overlappingTrajectory.put(startKey, crane.getTrajectory().get(startKey));
-                    overlappingTrajectory.put(endKey, crane.getTrajectory().get(endKey));
+        for(Double timeStart : crane.getTrajectory().keySet()){
+            if(crane.getTrajectory().higherKey(timeStart) != null){
+                Double timeEnd = crane.getTrajectory().higherKey(timeStart);
+                if(startTime < timeEnd && timeStart < endTime){
+                    Point start = crane.getTrajectory().get(timeStart);
+                    Point end = crane.getTrajectory().get(timeEnd);
+                    if(crane.getSpeedX() > (end.getX() - start.getX()) / (timeEnd - timeStart)){
+                        double timeEffectiveStart = timeEnd - (end.getX()-start.getX())/crane.getSpeedX();
+                        overlappingTrajectory.put(timeStart, crane.getTrajectory().get(timeStart));
+                        overlappingTrajectory.put(timeEffectiveStart, crane.getTrajectory().get(timeStart));
+                        overlappingTrajectory.put(timeEnd, crane.getTrajectory().get(timeEnd));
+                    } else {
+                        overlappingTrajectory.put(timeStart, crane.getTrajectory().get(timeStart));
+                        overlappingTrajectory.put(timeEnd, crane.getTrajectory().get(timeEnd));
+                    }
                 }
             }
         }
         return overlappingTrajectory;
     }
 
-    public void putContainerInSlots(Container container, Slot[] slots, int maxHeight) throws Exception {
+    public void transferContainerToSlots(Container container, Slot[] slots, int maxHeight) throws Exception {
         if(slots.length != container.getLength()){
             throw new Exception();
         }
-        if(isStackable(container, slots, maxHeight)){
+        if(isStackable(container, slots, maxHeight) && isContainerMovable(container)){
             container.setSlots(slots);
             for(Slot slot : slots){
                 slot.stackContainer(container);
             }
+        }else{
+            throw new Exception();
+        }
+    }
+
+    public void initializeSlots(Container container, Slot[] slots) {
+        for(Slot slot : slots){
+            slot.stackContainer(container);
         }
     }
 
@@ -442,8 +478,6 @@ public class Terminal {
 
     public boolean isContainerMovable(Container container){
         Slot[] containerSlots = container.getSlots();
-
-
         boolean isMovable = true;
         for(Slot containerSlot : containerSlots){
             isMovable = isMovable && containerSlot.getContainerStack().peek() == container;

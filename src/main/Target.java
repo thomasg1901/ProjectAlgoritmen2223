@@ -18,7 +18,7 @@ public class Target {
     private int targetHeight;
     private List<Movement> moveAssignments;
 
-    public Target(Terminal initialTerminal, Assignment[] targetAssignments) {
+    public Target(Terminal initialTerminal, Assignment[] targetAssignments) throws Exception {
         this.initialTerminal = initialTerminal;
         this.targetAssignments = targetAssignments;
         this.maxHeight = initialTerminal.getMaxHeight();
@@ -60,7 +60,11 @@ public class Target {
                 Set<Container> containers = getContainersAtHeight(initialTerminal.getSlotGrid(), i);
                 Map<Container, List<Slot>> feasibleLeftSlots = new HashMap<>();
                 for(Container container : containers){
-                    feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container, 0, initialTerminal.getWidth()));
+                    try {
+                        feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container, 0, initialTerminal.getWidth(), new ArrayList<>()));
+                    } catch (Exception ex){
+                        ex.printStackTrace();
+                    }
                 }
                 while(!feasibleLeftSlots.isEmpty()){
                     Container minPossibleLocationsContainer = Collections.min(feasibleLeftSlots.entrySet(), comparingInt(entry -> entry.getValue().size())).getKey();

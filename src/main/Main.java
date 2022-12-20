@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Terminal terminal = JsonReader.readInitialTerminal("./src/main/resources/instances/5t/TerminalB_20_10_3_2_160.json");
         Assignment[] targetAss = JsonReader.readAssignments("./src/main/resources/instances/5t/targetTerminalB_20_10_3_2_160.json", terminal);
         //terminal = JsonReader.readTerminal("./src/main/resources/examples/terminal22_1_100_1_10.json");
