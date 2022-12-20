@@ -24,14 +24,40 @@ public class Target {
         this.maxHeight = initialTerminal.getMaxHeight();
         this.moveAssignments = calculateToFinalTerminal();
         initialTerminal.executeMovements(moveAssignments);
+        System.out.println(validateFinalTerminal());
     }
 
-    public Target(Terminal initialTerminal){
+    public Target(Terminal initialTerminal) throws Exception {
         this.initialTerminal = initialTerminal;
         this.maxHeight = this.initialTerminal.getMaxHeight();
         this.targetHeight = this.initialTerminal.getTargetHeight();
         this.moveAssignments = calculateToTargetHeight();
+        initialTerminal.executeMovements(moveAssignments);
+        System.out.println(validateConversionTerminal());
     }
+
+    private boolean validateFinalTerminal(){
+        for(Assignment assignment: this.targetAssignments){
+            if (!initialTerminal.isContainerInSlots(assignment.getContainer(), assignment.getContainerSlots())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean validateConversionTerminal(){
+        for (int x = 0; x < initialTerminal.getSlotGrid().length; x++) {
+            for (int y = 0; y < initialTerminal.getSlotGrid()[x].length; y++){
+                Slot slot = initialTerminal.getSlotGrid()[x][y];
+                if (slot.getSlotHeight() > targetHeight) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
 
     private List<Movement> calculateToFinalTerminal(){
         List<Movement> movements = new ArrayList<>();
@@ -61,7 +87,7 @@ public class Target {
                 Map<Container, List<Slot>> feasibleLeftSlots = new HashMap<>();
                 for(Container container : containers){
                     try {
-                        feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container, 0, initialTerminal.getWidth(), new ArrayList<>()));
+                        feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container, initialTerminal.getWidth(), 0, new ArrayList<>()));
                     } catch (Exception ex){
                         ex.printStackTrace();
                     }

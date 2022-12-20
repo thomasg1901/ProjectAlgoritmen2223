@@ -110,6 +110,7 @@ public class Terminal {
     public void executeMovements(List<Movement> movements) throws Exception {
         assignMovementsToCranes(movements);
         boolean movementsLeft = true;
+        double start = System.currentTimeMillis();
         while (movementsLeft) {
             movementsLeft = false;
             for (Crane crane : this.cranes) {
@@ -118,12 +119,11 @@ public class Terminal {
                     if(isMovementFeasible(movement, crane)){
                         executeMovement(movement, crane);
                         crane.getAssignedMovements().remove(0);
-                        movementsLeft = true;
-
                     }else{
                         crane.getAssignedMovements().remove(0);
                         crane.addMovement(movement);
                     }
+                    movementsLeft = true;
                 }
             }
         }
@@ -454,6 +454,9 @@ public class Terminal {
             throw new Exception();
         }
         if(isStackable(container, slots, maxHeight) && isContainerMovable(container)){
+            for (Slot slot: container.getSlots()){
+                slot.removeContainerFromSlot();
+            }
             container.setSlots(slots);
             for(Slot slot : slots){
                 slot.stackContainer(container);
@@ -515,6 +518,15 @@ public class Terminal {
         }
 
         return isStackedOnSmaller;
+    }
+
+    public boolean isContainerInSlots(Container container, Slot[] slots){
+        boolean containerSlottedCorrectly = true;
+        for(Slot slot : slots){
+            if(!slot.getContainerStack().contains(container))
+                return false;
+        }
+        return true;
     }
 
     public List<Crane> getCranes() {
