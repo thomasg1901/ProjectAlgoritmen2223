@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="name change">
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="Idea on how to execute a movement">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -204,7 +206,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671535698875</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Idea on how to execute a movement">
+      <created>1671536059820</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1671536059820</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -235,7 +244,8 @@
     <MESSAGE value="Issue where overhanding the cranes gave a problem with the timing" />
     <MESSAGE value="changes in movement to indicate the times it gets executed" />
     <MESSAGE value="name change" />
-    <option name="LAST_COMMIT_MESSAGE" value="name change" />
+    <MESSAGE value="Idea on how to execute a movement" />
+    <option name="LAST_COMMIT_MESSAGE" value="Idea on how to execute a movement" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -257,6 +267,7 @@
         <PinnedItemInfo parentTag="main.Assignment" memberName="container" />
         <PinnedItemInfo parentTag="main.Terminal" memberName="cranes" />
         <PinnedItemInfo parentTag="main.Slot" memberName="containerStack" />
+        <PinnedItemInfo parentTag="main.Container" memberName="length" />
         <PinnedItemInfo parentTag="main.Container" memberName="id" />
         <PinnedItemInfo parentTag="main.Movement" memberName="slotsFrom" />
         <PinnedItemInfo parentTag="main.Crane" memberName="trajectory" />

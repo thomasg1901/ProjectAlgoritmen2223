@@ -96,22 +96,6 @@ public class Target {
         return closestSlot;
     }
 
-    private void test(List<Crane> allCranes){
-        boolean movementsLeft = true;
-        while (movementsLeft) {
-            movementsLeft = false;
-            for (Crane crane : allCranes) {
-                List<Movement> movements = crane.getAssignedMovements();
-                if (!movements.isEmpty()) {
-                    Movement movement = movements.get(0);
-//                    movement.execute();
-                    movements.remove(0);
-                    movementsLeft = true;
-                }
-            }
-        }
-    }
-
     public Set<Container> getContainersAtHeight(Slot[][] slotGrid, int height){
         Set<Container> containersAtHeight = new HashSet<>();
         for (int x = 0; x < slotGrid.length; x++) {

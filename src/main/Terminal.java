@@ -17,6 +17,7 @@ public class Terminal {
     private final int width;
 
     private final int length;
+    private double lastMovingtime;
 
     public Terminal(String name, List<Container> containers, Slot[][] slotGrid, Assignment[] assignments, List<Crane> cranes, int maxHeight, int targetHeight, int width, int length) {
         this.name = name;
@@ -28,6 +29,7 @@ public class Terminal {
         this.width = width;
         this.length = length;
         this.targetHeight = targetHeight;
+        this.lastMovingtime = 0;
     }
 
     public List<Container> getContainers() {
@@ -69,15 +71,21 @@ public class Terminal {
     public void moveCrane(Crane crane, Point p, double startTime){
         Set<Double> times = crane.getTrajectory().keySet();
         if(!times.isEmpty() && startTime < Collections.max(times)){
-            //throw new IllegalArgumentException("Invalid startTime");
+            throw new IllegalArgumentException("Invalid startTime");
         }
         double timex = ((double) Math.abs(p.getX() - crane.getPosition().getX()))/crane.getSpeedX();
         double timey = ((double) Math.abs(p.getY() - crane.getPosition().getY()))/crane.getSpeedY();
         double endTime = startTime + Math.max(timex, timey);
 
+
+        lastMovingtime = Math.max(endTime, lastMovingtime);
+
         // Control movement
-        if(getCollidingCranes(p, crane, 1, startTime, endTime).size()>0){
-            throw new IllegalArgumentException("Crane comes to close to the other cranes to move to this point");
+        List<Crane> collidingCranes = getCollidingCranes(p, crane, 1, startTime, endTime);
+        if(collidingCranes.size()>0){
+            moveCranesOutTheWay(p,collidingCranes);
+            if(getCollidingCranes(p, crane, 1, startTime, endTime).size() > 0)
+                throw new IllegalArgumentException("Crane comes to close to the other cranes to move to this point");
         }
 
         TreeMap<Double, Point> trajectory = crane.getTrajectory();
@@ -91,27 +99,50 @@ public class Terminal {
 
     public void executeMovements(List<Movement> movements){
         assignMovementsToCranes(movements);
+        boolean movementsLeft = true;
+        while (movementsLeft) {
+            movementsLeft = false;
+            for (Crane crane : this.cranes) {
+                if (!crane.getAssignedMovements().isEmpty()) {
+                    Movement movement = crane.getAssignedMovements().get(0);
+                    if(isMovementFeasible(movement, crane)){
+                        executeMovement(movement, crane);
+                        crane.getAssignedMovements().remove(0);
+                        movementsLeft = true;
 
-        for (Crane crane: cranes){
-            for (Movement movement:crane.getAssignedMovements()) {
-                System.out.println("Move crane with id: "+ crane.getId()+" to location " + movement.getSlotsFrom()[0].getLocation().toString()+ " to get container" + movement.getContainer().getId()+ " and place it at "+ movement.getSlotsTo()[0].getLocation());
-                System.out.println("the container is grepable: "+isContainerMovable(movement.getContainer()));
-                System.out.println("the container is placeable: "+isStackable(movement.getContainer(), movement.getSlotsTo(), this.maxHeight));
+                    }else{
+                        crane.getAssignedMovements().remove(0);
+                        crane.addMovement(movement);
+                    }
+                }
             }
         }
-
     }
 
-    private boolean isMovementFeasible(Movement movement){
-        return isContainerMovable(movement.getContainer()) && isStackable(movement.getContainer(), movement.getSlotsTo(), this.maxHeight);
+    private boolean isMovementFeasible(Movement movement, Crane crane){
+        return isContainerMovableByCrane(movement.getContainer(), crane) && isStackable(movement.getContainer(), movement.getSlotsTo(), this.maxHeight);
     }
 
     private void executeMovement(Movement movement, Crane crane){
+        System.out.println("Move crane with id: "+ crane.getId()+" to location " + movement.getSlotsFrom()[0].getLocation().toString()+ " to get container" + movement.getContainer().getId()+ " and place it at "+ movement.getSlotsTo()[0].getLocation());
+        System.out.println("the container is grepable: "+ isContainerMovableByCrane(movement.getContainer(), crane));
+        System.out.println("the container is placeable: "+isStackable(movement.getContainer(), movement.getSlotsTo(), this.maxHeight));
+
+        List<Point> craneMovingPoints = generatePointsFromMovement(movement, crane);
         // 1 Verplaats kraan naar container locatie
-        // 2 verwijder container uit locatie
+        moveCrane(crane, craneMovingPoints.get(0), lastMovingtime);
+        // 2 verwijder container uit locatie (& plaats in de nieuwe)
+        try {
+            putContainerInSlots(movement.getContainer(),movement.getSlotsTo(),maxHeight);
+        }catch (Exception e){
+            System.out.println("Could not place container");
+        }
+
+        moveCrane(crane, craneMovingPoints.get(1), lastMovingtime);
         // 3 verplaats kraan naar end slot
-        // 4 plaats contianer op end slot
+
         // 5 als end slot in overlap zone verplaats kraan eruit
+
     }
 
     private void assignMovementsToCranes(List<Movement> movements){
@@ -238,14 +269,19 @@ public class Terminal {
         return assignedCrane;
     }
 
-    private void moveCranesOutTheWay(Point collisionPoint, List<Crane> collidingCranes, double time){
+    private void moveCranesOutTheWay(Point collisionPoint, List<Crane> collidingCranes){
         for (Crane crane: collidingCranes) {
             Point pointToMoveTo = new Point(collisionPoint.getX() + 2 , crane.getPosition().getY());
-            if(collisionPoint.getX() > crane.getPosition().getX()){ // kraan is links van het punt
+            if(collisionPoint.getX() > crane.getxMax()){ // kraan is links van het punt
                 pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
             }
 
-            moveCrane(crane,pointToMoveTo,time - Math.abs(crane.getPosition().getX() - pointToMoveTo.getX())/crane.getSpeedX());
+            double earliestMovingTime = 0;
+            if(!crane.getTrajectory().isEmpty()){
+                earliestMovingTime = Collections.max(crane.getTrajectory().keySet());
+            }
+
+            moveCrane(crane,pointToMoveTo,earliestMovingTime);
         }
     }
 
@@ -264,6 +300,10 @@ public class Terminal {
         }
 
         return cranes;
+    }
+
+    private boolean isPointAccessibleByCrane(Point point, Crane crane){
+        return Math.max(crane.getxMax(), point.getX()) == crane.getxMax() && Math.min(point.getX(), crane.getxMin()) == crane.getxMin();
     }
 
     public Point getCenterLocationForCrane(Slot[] slots, Container container){
@@ -298,7 +338,7 @@ public class Terminal {
         }
         return collidingCranes;
     }
-
+/*
     public boolean isTravellingColliding(Point destinationMovingCrane,
                                       Crane movingCrane,
                                       Crane collisionCrane,
@@ -336,7 +376,7 @@ public class Terminal {
         }
         return false;
     }
-
+*/
     private boolean coordinateIntervalsOverlap(Point begin1, Point end1, Point begin2, Point end2, int delta){
         return begin1.getX() + delta < end2.getX() && begin2.getX() + delta < end1.getX();
     }
@@ -383,16 +423,26 @@ public class Terminal {
         if(slots.length != container.getLength()){
             throw new Exception();
         }
-        if(isStackable(container, slots, maxHeight)){
+        if(isStackable(container, slots, maxHeight) && isContainerMovable(container)){
             container.setSlots(slots);
             for(Slot slot : slots){
                 slot.stackContainer(container);
             }
+        }else{
+            throw new Exception();
         }
+    }
+
+    public boolean isContainerMovableByCrane(Container container, Crane crane){
+        Slot[] containerSlots = container.getSlots();
+
+        boolean isMovable = isPointAccessibleByCrane(getCenterLocationForCrane(containerSlots, container), crane);
+        return isMovable && isContainerMovable(container);
     }
 
     public boolean isContainerMovable(Container container){
         Slot[] containerSlots = container.getSlots();
+
         boolean isMovable = true;
         for(Slot containerSlot : containerSlots){
             isMovable = isMovable && containerSlot.getContainerStack().peek() == container;
