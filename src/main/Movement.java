@@ -1,5 +1,9 @@
 package main;
-public class Movement {
+
+import java.util.Arrays;
+import java.util.Objects;
+
+public class Movement implements Comparable{
     private Slot[] slotsFrom;
     private Slot[] slotsTo;
     private Container container;
@@ -80,5 +84,27 @@ public class Movement {
         }
 
         return true;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Movement m = (Movement)o;
+        return this.getContainer().getLength() - m.getContainer().getLength();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Movement movement = (Movement) o;
+        return Double.compare(movement.startTime, startTime) == 0 && Double.compare(movement.endTime, endTime) == 0 && Double.compare(movement.releaseDate, releaseDate) == 0 && Arrays.equals(slotsFrom, movement.slotsFrom) && Arrays.equals(slotsTo, movement.slotsTo) && container.equals(movement.container) && Objects.equals(dependentPrevMovement, movement.dependentPrevMovement) && terminal.equals(movement.terminal);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(container, startTime, endTime, releaseDate, dependentPrevMovement, terminal);
+        result = 31 * result + Arrays.hashCode(slotsFrom);
+        result = 31 * result + Arrays.hashCode(slotsTo);
+        return result;
     }
 }

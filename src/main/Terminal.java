@@ -1,6 +1,5 @@
 package main;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -91,10 +90,10 @@ public class Terminal {
         lastMovingtime = Math.max(endTime, lastMovingtime);
 
         // Control movement
-        List<Crane> collidingCranes = getCollidingCranes(p, crane, 1, startTime, endTime);
+        List<Crane> collidingCranes = getCollidingCranes(p, crane, 1);
         if(collidingCranes.size()>0){
             moveCranesOutTheWay(p,collidingCranes);
-            if(getCollidingCranes(p, crane, 1, startTime, endTime).size() > 0)
+            if(getCollidingCranes(p, crane, 1).size() > 0)
                 throw new IllegalArgumentException("Crane comes to close to the other cranes to move to this point");
         }
 
@@ -107,7 +106,33 @@ public class Terminal {
         crane.setTrajectory(trajectory);
     }
 
+    public List<Movement> shiftDependentMovements(List<Movement> movements){
+        Set<Movement> movementsToPutLast = new HashSet<>();
+        for(int i = 0; i < movements.size(); i++){
+            for(int j = 0; j < movements.size(); j++){
+                ArrayList slotsFrom = new ArrayList<>();
+                slotsFrom.addAll(List.of(movements.get(i).getSlotsFrom()));
+
+                ArrayList slotsTo = new ArrayList<>();
+                slotsTo.addAll(List.of(movements.get(j).getSlotsTo()));
+
+                slotsFrom.retainAll(slotsTo);
+                if(slotsFrom.size() > 0){
+                    movementsToPutLast.add(movements.get(j));
+                }
+            }
+        }
+        movements.removeAll(movementsToPutLast);
+        movements.addAll(movementsToPutLast);
+        return movements;
+    }
+
     public void executeMovements(List<Movement> movements) throws Exception {
+        //Als container moet verplaatst worden naar een slot van waaruit nog een verplaatsing moet gebeuren:
+        // achteraan opschuiven
+        // Als movement destination slots bevat van from slots van een andere movement --> achteraan opschuiven
+        movements = shiftDependentMovements(movements);
+        Collections.sort(movements);
         assignMovementsToCranes(movements);
         boolean movementsLeft = true;
         double start = System.currentTimeMillis();
@@ -119,7 +144,7 @@ public class Terminal {
                     if(isMovementFeasible(movement, crane)){
                         executeMovement(movement, crane);
                         crane.getAssignedMovements().remove(0);
-                    }else{
+                    } else {
                         crane.getAssignedMovements().remove(0);
                         crane.addMovement(movement);
                     }
@@ -134,7 +159,7 @@ public class Terminal {
     }
 
     private void executeMovement(Movement movement, Crane crane){
-        System.out.println("Move crane with id: "+ crane.getId()+" to location " + movement.getSlotsFrom()[0].getLocation().toString()+ " to get container" + movement.getContainer().getId()+ " and place it at "+ movement.getSlotsTo()[0].getLocation());
+        System.out.println("Move crane with id: "+ crane.getId()+" to location " + movement.getSlotsFrom()[0].getLocation().toString()+ " to get container " + movement.getContainer().getId()+ " and place it at "+ movement.getSlotsTo()[0].getLocation());
         System.out.println("the container is grepable: "+ isContainerMovableByCrane(movement.getContainer(), crane));
         System.out.println("the container is placeable: "+isStackable(movement.getContainer(), movement.getSlotsTo(), this.maxHeight));
 
@@ -167,7 +192,7 @@ public class Terminal {
                     possibleCranes = getPossibleCranesForMovement(partialMovement);
                     Crane assignedCrane = assignCrane(possibleCranes);
                     assignedCrane.addMovement(partialMovement);
-                    System.out.println("Dubble movement for container with id: "+ movement.getContainer().getId());
+                    System.out.println("Double movement for container with id: "+ movement.getContainer().getId());
                 }
             }else{
                 Crane assignedCrane = assignCrane(possibleCranes);
@@ -237,9 +262,9 @@ public class Terminal {
         if(cranesWithOverlap.size() == 0)
             throw new IllegalArgumentException("No crane can get to this location");
         Crane crane = cranesWithOverlap.get(0);
-        double xmax = Math.min(crane.getxMax(), assignedCrane.getxMax()) - container.getLength()/2.0;
-        double xmin = Math.max(crane.getxMin(), assignedCrane.getxMin());
-        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmax),(int) Math.ceil(xmin), crane.getAssignedMovements()).get(0);
+        double xmax = Math.min(crane.getxMax(), assignedCrane.getxMax()) - Math.floor(container.getLength()/2.0);
+        double xmin = Math.max(crane.getxMin(), assignedCrane.getxMin()) - Math.floor(container.getLength()/2.0);
+        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmax),(int) Math.floor(xmin), crane.getAssignedMovements(), maxHeight).get(0);
         return getSlotsFromLeftMostSlot(leftMostSlot, container.getLength());
     }
 
@@ -334,20 +359,11 @@ public class Terminal {
         return new Point(x,y);
     }
 
-//    C1:   @t5=(0,8) --> @t9=(7,9)
-//    C2: 	@t4=(0,7) --> @t6=(6,4)
-//          @t7=(6,4) --> @t9=(5,3)
-    private List<Crane> getCollidingCranes(Point destination, Crane movingCrane, int delta, double startTime, double endTime){
+
+    private List<Crane> getCollidingCranes(Point destination, Crane movingCrane, int delta){
         List<Crane> collidingCranes = new ArrayList<>();
         for (Crane crane : cranes) {
-            //Check for overlap between movingcrane.position-->destination & other crane-->his destination
             if (crane.getId() != movingCrane.getId()) {
-//                TreeMap<Double, Point> overlaps = getOverlappingTrajectoryTimes(startTime, endTime, crane);
-//                if(!overlaps.isEmpty()){
-//                    if(isTravellingColliding(destination, movingCrane, crane, overlaps, startTime, endTime, delta)){
-//                        collidingCranes.add(crane);
-//                    }
-//                }
                 if(movingCrane.getPosition().getX() < destination.getX()){ // move right
                     if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() - delta < destination.getX()) // Check if crane comes to close to the other cranes
                         collidingCranes.add(crane);
@@ -359,59 +375,22 @@ public class Terminal {
         }
         return collidingCranes;
     }
-/*
-    public boolean isTravellingColliding(Point destinationMovingCrane,
-                                      Crane movingCrane,
-                                      Crane collisionCrane,
-                                      TreeMap<Double, Point> overlappingTrajectory,
-                                      double startTimeMoving,
-                                      double endTimeMoving,
-                                      int delta){
-        Point startMovingCrane = movingCrane.getPosition();
-        for(Double startTime : overlappingTrajectory.keySet()){
-            Point start = overlappingTrajectory.get(startTime);
-            Double endTime = overlappingTrajectory.higherKey(startTime);
-            Point movingCraneStart = new Point(startMovingCrane.getX(), startMovingCrane.getY());
-            Point movingCraneDest = new Point(destinationMovingCrane.getX(), destinationMovingCrane.getY());
-            Point end = overlappingTrajectory.get(endTime);
-            // Possibility 1: start & end of overlap are between interval --> boundaries interval change
-            if(startTime > startTimeMoving && endTime < endTimeMoving){
-                movingCraneStart.setX(movingCrane.getSpeedX() * (startTime - startTimeMoving) + startMovingCrane.getX());
-                movingCraneDest.setX(destinationMovingCrane.getX() - movingCrane.getSpeedX() * (endTimeMoving - endTime));
-            } // Possibility 2: start & end of overlap are at beginning of interval --> begin time overlap change
-            else if (startTime < startTimeMoving && endTime < endTimeMoving){
-                start.setX(collisionCrane.getSpeedX() * (startTimeMoving - startTime) + start.getX());
-                movingCraneDest.setX(destinationMovingCrane.getX() - collisionCrane.getSpeedX() * (endTimeMoving - endTime));
-            }// Possibility 3: start & end of overlap are at the end of interval --> end time overlap change
-            else if (startTime > startTimeMoving && endTime > endTimeMoving){
-                movingCraneStart.setX(movingCrane.getSpeedX() * (startTime - startTimeMoving) + startMovingCrane.getX());
-                end.setX(end.getX() - collisionCrane.getSpeedX() * (endTime - endTimeMoving));
-            }// Possibility 4: start & end of overlap contain the interval --> boundaries overlap change
-            else if (startTime < startTimeMoving && endTime > endTimeMoving){
-                start.setX(collisionCrane.getSpeedX() * (startTimeMoving - startTime) + start.getX());
-                end.setX(end.getX() - collisionCrane.getSpeedX() * (endTime - endTimeMoving));
-            }
-            if(coordinateIntervalsOverlap(start, end, movingCraneStart, movingCraneDest, delta)){
-                return true;
-            }
-        }
-        return false;
-    }
-*/
+
     private boolean coordinateIntervalsOverlap(Point begin1, Point end1, Point begin2, Point end2, int delta){
         return begin1.getX() + delta < end2.getX() && begin2.getX() + delta < end1.getX();
     }
 
-    public List<Slot> getFeasibleLeftSlots(Container container,int xMax, int xMin, List<Movement> ambetanteMovements) throws Exception {
+    public List<Slot> getFeasibleLeftSlots(Container container,int xMax, int xMin, List<Movement> movements, int maxHeight) throws Exception {
         List<Slot> feasibleLeftSlots = new ArrayList<>();
-        List<Slot> allInterferingSlots = ambetanteMovements.stream().map(Movement::getSlotsTo).flatMap(Stream::of).toList();
+        List<Slot> allInterferingSlots = movements.stream().map(Movement::getSlotsTo).flatMap(Stream::of).toList();
         for (int x = xMin; x < xMax; x++) {
             for (int y = 0; y < slotGrid[x].length; y++){
                 Slot slot = slotGrid[x][y];
                 if((slot.getLocation().getX() + container.getLength()) <= length
                         &&
                         isStackable(container, getSlotsFromLeftMostSlot(slot, container.getLength()), targetHeight)
-                && !allInterferingSlots.contains(slot)){
+                && !allInterferingSlots.contains(slot)
+                && slot.getContainerStack().size() < maxHeight){
                     feasibleLeftSlots.add(slot);
                 }
             }
@@ -429,29 +408,6 @@ public class Terminal {
             slots[i] = slotGrid[(int) leftMostSlot.getLocation().getX()+i][(int) leftMostSlot.getLocation().getY()];
         }
         return slots;
-    }
-
-    private TreeMap<Double, Point> getOverlappingTrajectoryTimes(double startTime, double endTime, Crane crane){
-        TreeMap<Double, Point> overlappingTrajectory = new TreeMap<>();
-        for(Double timeStart : crane.getTrajectory().keySet()){
-            if(crane.getTrajectory().higherKey(timeStart) != null){
-                Double timeEnd = crane.getTrajectory().higherKey(timeStart);
-                if(startTime < timeEnd && timeStart < endTime){
-                    Point start = crane.getTrajectory().get(timeStart);
-                    Point end = crane.getTrajectory().get(timeEnd);
-                    if(crane.getSpeedX() > (end.getX() - start.getX()) / (timeEnd - timeStart)){
-                        double timeEffectiveStart = timeEnd - (end.getX()-start.getX())/crane.getSpeedX();
-                        overlappingTrajectory.put(timeStart, crane.getTrajectory().get(timeStart));
-                        overlappingTrajectory.put(timeEffectiveStart, crane.getTrajectory().get(timeStart));
-                        overlappingTrajectory.put(timeEnd, crane.getTrajectory().get(timeEnd));
-                    } else {
-                        overlappingTrajectory.put(timeStart, crane.getTrajectory().get(timeStart));
-                        overlappingTrajectory.put(timeEnd, crane.getTrajectory().get(timeEnd));
-                    }
-                }
-            }
-        }
-        return overlappingTrajectory;
     }
 
     public void transferContainerToSlots(Container container, Slot[] slots, int maxHeight) throws Exception {

@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="More prints of what happends">
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="1t, 2mh, 3t, 5t, 6t &amp; 7t werken, problemen met 4mh, 8t, 9t &amp; 10t">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Movement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Movement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -262,19 +265,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="More prints of what happends" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/Target.java</url>
-          <line>88</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="main.Assignment" memberName="container" />
         <PinnedItemInfo parentTag="main.Terminal" memberName="cranes" />
+        <PinnedItemInfo parentTag="main.Slot" memberName="containerStack" />
         <PinnedItemInfo parentTag="main.Container" memberName="length" />
         <PinnedItemInfo parentTag="main.Container" memberName="id" />
         <PinnedItemInfo parentTag="main.Slot" memberName="id" />
