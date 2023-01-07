@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="in and out file in args &amp; collision based on overlapping zones">
+      <change beforePath="$PROJECT_DIR$/.idea/csv-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/4/442292b8a7efeabbe4cc176709b833b1792140ec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,10 +60,16 @@
       <recent name="G:\School stuff\Masterjaar\ProjectAlgoritmen2223\src\main\resources\instances\5t" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn jar:jar" />
+    </option>
+  </component>
+  <component name="RunManager" selected="JAR Application.ProjectAlgoritmen2223-1.0-SNAPSHOT.jar">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <module name="ProjectAlgoritmen2223" />
+      <option name="PROGRAM_PARAMETERS" value="&quot;src/main/resources/instances/1t/TerminalA_20_10_3_2_100.json&quot; &quot;./src/main/resources/instances/1t/targetTerminalA_20_10_3_2_100.json&quot; &quot;.\src\main\resources\instances\2mh\test.csv&quot;" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="main.*" />
@@ -70,8 +80,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ProjectAlgoritmen2223-1.0-SNAPSHOT.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/target/ProjectAlgoritmen2223-1.0-SNAPSHOT.jar" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="JAR Application.ProjectAlgoritmen2223-1.0-SNAPSHOT.jar" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JAR Application.ProjectAlgoritmen2223-1.0-SNAPSHOT.jar" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -239,7 +258,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673093961314</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="in and out file in args &amp; collision based on overlapping zones">
+      <created>1673094240814</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1673094240814</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -284,6 +310,11 @@
           <url>file://$PROJECT_DIR$/src/main/Target.java</url>
           <line>92</line>
           <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/Main.java</url>
+          <line>10</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

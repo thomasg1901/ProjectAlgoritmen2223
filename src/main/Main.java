@@ -14,10 +14,9 @@ public class Main {
             String inputFile = args[0];
             String outputFile = args[1];
 
-            Terminal terminalToConvert = JsonReader.readInitialTerminal("./src/main/resources/instances/2mh/MH2Terminal_20_10_3_2_100.json");
+            Terminal terminalToConvert = JsonReader.readInitialTerminal(inputFile);
             Target terminalConversionExample = new Target(terminalToConvert);
-
-
+            writeTerminalToOutput(terminalToConvert, outputFile);
         } else if (args.length == 3) {
             // Target conversion
 
@@ -28,17 +27,8 @@ public class Main {
             Terminal terminal = JsonReader.readInitialTerminal(initialStateFile);
             Assignment[] targetAssignments = JsonReader.readAssignments(targetStateFile, terminal);
             Target fixedTranshipmentsExample = new Target(terminal, targetAssignments);
-            writeTerminalToOutput(terminal, args[2]);
+            writeTerminalToOutput(terminal, outputFile);
         }
-
-        Terminal terminal = JsonReader.readInitialTerminal("./src/main/resources/instances/5t/TerminalB_20_10_3_2_160.json");
-        Assignment[] targetAss = JsonReader.readAssignments("./src/main/resources/instances/5t/targetTerminalB_20_10_3_2_160.json", terminal);
-        Terminal terminalToConvert = JsonReader.readInitialTerminal("./src/main/resources/instances/2mh/MH2Terminal_20_10_3_2_100.json");
-        Target fixedTranshipmentsExample = new Target(terminal, targetAss);
-        Target terminalConversionExample = new Target(terminalToConvert);
-
-
-        writeTerminalToOutput(terminalToConvert, "./src/main/resources/test2.csv");
     }
 
 
