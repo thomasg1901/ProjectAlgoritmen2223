@@ -1,6 +1,7 @@
 package main;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparingDouble;
@@ -90,28 +91,69 @@ public class Target {
                 Map<Container, List<Slot>> feasibleLeftSlots = new HashMap<>();
                 for(Container container : containers){
                     try {
-                        feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container, initialTerminal.getWidth(), 0, new ArrayList<>()));
+                        feasibleLeftSlots.put(container, initialTerminal.getFeasibleLeftSlots(container, initialTerminal.getWidth(), 0, new ArrayList<>(), targetHeight));
                     } catch (Exception ex){
                         ex.printStackTrace();
                     }
                 }
+                Set<Slot> allSlotCandidates = feasibleLeftSlots.values().stream().flatMap(List::stream).collect(Collectors.toSet());
+                Map<Slot, Integer> candidatePossibilities = new HashMap<>();
+                for(Slot slotCandidate : allSlotCandidates){
+                    candidatePossibilities.put(slotCandidate, targetHeight-slotCandidate.getSlotHeight());
+                }
                 while(!feasibleLeftSlots.isEmpty()){
-                    Container minPossibleLocationsContainer = Collections.min(feasibleLeftSlots.entrySet(), comparingInt(entry -> entry.getValue().size())).getKey();
-                    Slot leftMostSlot = getClosestFeasibleLeftSlot(minPossibleLocationsContainer, feasibleLeftSlots.get(minPossibleLocationsContainer));
+                    Map<Container, List<Slot>> containerSlotCandidates = findSlotWithLeastAmountOfOccurences(feasibleLeftSlots);
+                    Container minPossibleLocationsContainer = Collections.min(containerSlotCandidates.entrySet(), comparingInt(entry -> entry.getValue().size())).getKey();
+                    Slot leftMostSlot = getClosestFeasibleLeftSlot(minPossibleLocationsContainer, containerSlotCandidates.get(minPossibleLocationsContainer));
+                    getClosestFeasibleLeftSlot(minPossibleLocationsContainer, containerSlotCandidates.get(minPossibleLocationsContainer));
+
                     movements.add(new Movement(minPossibleLocationsContainer.getSlots(),
                             initialTerminal.getSlotsFromLeftMostSlot(leftMostSlot, minPossibleLocationsContainer.getLength()), minPossibleLocationsContainer, initialTerminal));
                     feasibleLeftSlots.remove(minPossibleLocationsContainer);
+                    candidatePossibilities.put(leftMostSlot, candidatePossibilities.get(leftMostSlot)-1);
                     for(Container container : feasibleLeftSlots.keySet()){
-                        if(feasibleLeftSlots.get(container).contains(leftMostSlot)){
-                            if(!initialTerminal.isStackable(container, initialTerminal.getSlotsFromLeftMostSlot(leftMostSlot, container.getLength()), initialTerminal.getTargetHeight())){
-                                feasibleLeftSlots.get(container).remove(leftMostSlot);
-                            }
+                        if(feasibleLeftSlots.get(container).contains(leftMostSlot) && candidatePossibilities.get(leftMostSlot) == 0){
+                            feasibleLeftSlots.get(container).remove(leftMostSlot);
                         }
                     }
                 }
             }
         }
         return movements;
+    }
+
+    private Map<Container, List<Slot>> findSlotWithLeastAmountOfOccurences(Map<Container, List<Slot>> feasibleLeftSlots){
+        List<Slot> allSlotCandidates = feasibleLeftSlots.values().stream().flatMap(List::stream).collect(Collectors.toList());
+        Map<Slot, Integer> slotOccurences = new HashMap<>();
+        for(Slot slotCandidate : allSlotCandidates){
+            if(!slotOccurences.containsKey(slotCandidate))
+                slotOccurences.put(slotCandidate, 1);
+            else
+                slotOccurences.put(slotCandidate, slotOccurences.get(slotCandidate)+1);
+        }
+        int minValue = slotOccurences.values().stream().min(Comparator.naturalOrder()).get();
+        List<Slot> possibleCandidates =  slotOccurences.entrySet().stream()
+                .filter(e -> e.getValue().equals(minValue))
+                .map(Entry::getKey)
+                .collect(Collectors.toList());
+        Map<Container, List<Slot>> containerCandidates = new LinkedHashMap<>();
+        LinkedHashMap<Container, List<Slot>> filteredHashMap = feasibleLeftSlots.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.comparingInt(List::size)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+        for(Container container : filteredHashMap.keySet()){
+            if(feasibleLeftSlots.get(container).stream().anyMatch(possibleCandidates::contains)){
+                Slot slot = feasibleLeftSlots.get(container).stream().filter(o -> possibleCandidates.contains(o)).findFirst().get();
+                if(!containerCandidates.containsKey(container))
+                    containerCandidates.put(container, new ArrayList<>());
+                List<Slot> slots = containerCandidates.get(container);
+                slots.add(slot);
+                containerCandidates.put(container, slots);
+                return containerCandidates;
+            }
+        }
+        return containerCandidates;
     }
 
     private Slot getClosestFeasibleLeftSlot(Container container, List<Slot> feasibleLeftSlots){
