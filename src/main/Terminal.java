@@ -239,7 +239,7 @@ public class Terminal {
         Crane crane = cranesWithOverlap.get(0);
         double xmax = Math.min(crane.getxMax(), assignedCrane.getxMax()) - Math.floor(container.getLength()/2.0);
         double xmin = Math.max(crane.getxMin(), assignedCrane.getxMin()) - Math.floor(container.getLength()/2.0);
-        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmax),(int) Math.floor(xmin), crane.getAssignedMovements()).get(0);
+        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmax),(int) Math.floor(xmin), crane.getAssignedMovements(), maxHeight).get(0);
         return getSlotsFromLeftMostSlot(leftMostSlot, container.getLength());
     }
 
@@ -356,16 +356,17 @@ public class Terminal {
         return begin1.getX() + delta < end2.getX() && begin2.getX() + delta < end1.getX();
     }
 
-    public List<Slot> getFeasibleLeftSlots(Container container,int xMax, int xMin, List<Movement> ambetanteMovements) throws Exception {
+    public List<Slot> getFeasibleLeftSlots(Container container,int xMax, int xMin, List<Movement> movements, int maxHeight) throws Exception {
         List<Slot> feasibleLeftSlots = new ArrayList<>();
-        List<Slot> allInterferingSlots = ambetanteMovements.stream().map(Movement::getSlotsTo).flatMap(Stream::of).toList();
+        List<Slot> allInterferingSlots = movements.stream().map(Movement::getSlotsTo).flatMap(Stream::of).toList();
         for (int x = xMin; x < xMax; x++) {
             for (int y = 0; y < slotGrid[x].length; y++){
                 Slot slot = slotGrid[x][y];
                 if((slot.getLocation().getX() + container.getLength()) <= length
                         &&
                         isStackable(container, getSlotsFromLeftMostSlot(slot, container.getLength()), targetHeight)
-                && !allInterferingSlots.contains(slot)){
+                        && !allInterferingSlots.contains(slot)
+                        && slot.getContainerStack().size() < maxHeight){
                     feasibleLeftSlots.add(slot);
                 }
             }

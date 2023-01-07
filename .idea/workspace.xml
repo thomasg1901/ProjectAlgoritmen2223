@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="bug fix crane can't place the container in transition zone">
-      <change afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/4/442292b8a7efeabbe4cc176709b833b1792140ec" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="in and out file in args &amp; collision based on overlapping zones">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Crane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Crane.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Point.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -239,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671550600228</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="in and out file in args &amp; collision based on overlapping zones">
+      <created>1673093961314</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1673093961314</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -274,14 +274,15 @@
     <MESSAGE value="[FAULTY] some errors" />
     <MESSAGE value="More prints of what happends" />
     <MESSAGE value="bug fix crane can't place the container in transition zone" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fix crane can't place the container in transition zone" />
+    <MESSAGE value="in and out file in args &amp; collision based on overlapping zones" />
+    <option name="LAST_COMMIT_MESSAGE" value="in and out file in args &amp; collision based on overlapping zones" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/Target.java</url>
-          <line>91</line>
+          <line>92</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
