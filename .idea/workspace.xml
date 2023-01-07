@@ -4,8 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="More prints of what happends">
+    <list default="true" id="56c1391f-7dc9-4dee-92a8-18524f176217" name="Changes" comment="bug fix crane can't place the container in transition zone">
+      <change afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/4/442292b8a7efeabbe4cc176709b833b1792140ec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Crane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Crane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Point.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Target.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Target.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Terminal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Terminal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -225,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671544720936</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="bug fix crane can't place the container in transition zone">
+      <created>1671550600228</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1671550600228</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -259,14 +273,15 @@
     <MESSAGE value="Idea on how to execute a movement" />
     <MESSAGE value="[FAULTY] some errors" />
     <MESSAGE value="More prints of what happends" />
-    <option name="LAST_COMMIT_MESSAGE" value="More prints of what happends" />
+    <MESSAGE value="bug fix crane can't place the container in transition zone" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fix crane can't place the container in transition zone" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/Target.java</url>
-          <line>88</line>
+          <line>91</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
@@ -291,6 +306,7 @@
         <watch expression="terminal.cranes.get(0).trajectory.entrySet().toArray()[2]" />
         <watch expression="movements.get(4).terminal" />
         <watch expression="((Point)((Slot[])((Movement)((java.util.ArrayList)((Crane)((ArrayList)((Terminal)this).cranes).get(0)).assignedMovements).get(0)).slotsFrom)[0].location).y" custom="main.Terminal,main.Crane,main.Slot[],main.Movement,main.Point,java.util.ArrayList" />
+        <watch expression="collidingCranes" />
       </configuration>
     </watches-manager>
   </component>

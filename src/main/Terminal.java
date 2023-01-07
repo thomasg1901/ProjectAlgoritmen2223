@@ -77,7 +77,7 @@ public class Terminal {
         return length;
     }
 
-    public void moveCrane(Crane crane, Point p, double startTime){
+    public void moveCrane(Crane crane, Point p, double startTime, Container container){
 
         Set<Double> times = crane.getTrajectory().keySet();
         if(!times.isEmpty() && startTime < Collections.max(times)){
@@ -140,11 +140,11 @@ public class Terminal {
 
         List<Point> craneMovingPoints = generatePointsFromMovement(movement, crane);
         // 1 Verplaats kraan naar container locatie
-        moveCrane(crane, craneMovingPoints.get(0), lastMovingtime);
+        moveCrane(crane, craneMovingPoints.get(0), lastMovingtime, null);
         // 2 verwijder container uit locatie (& plaats in de nieuwe)
 
         // 3 verplaats kraan naar end slot
-        moveCrane(crane, craneMovingPoints.get(1), lastMovingtime);
+        moveCrane(crane, craneMovingPoints.get(1), lastMovingtime, movement.getContainer());
 
         // 4 plaats container op end slot
         try {
@@ -237,9 +237,9 @@ public class Terminal {
         if(cranesWithOverlap.size() == 0)
             throw new IllegalArgumentException("No crane can get to this location");
         Crane crane = cranesWithOverlap.get(0);
-        double xmax = Math.min(crane.getxMax(), assignedCrane.getxMax()) - container.getLength()/2.0;
-        double xmin = Math.max(crane.getxMin(), assignedCrane.getxMin());
-        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmax),(int) Math.ceil(xmin), crane.getAssignedMovements()).get(0);
+        double xmax = Math.min(crane.getxMax(), assignedCrane.getxMax()) - Math.floor(container.getLength()/2.0);
+        double xmin = Math.max(crane.getxMin(), assignedCrane.getxMin()) - Math.floor(container.getLength()/2.0);
+        Slot leftMostSlot = getFeasibleLeftSlots(container,(int) Math.floor(xmax),(int) Math.floor(xmin), crane.getAssignedMovements()).get(0);
         return getSlotsFromLeftMostSlot(leftMostSlot, container.getLength());
     }
 
@@ -286,14 +286,12 @@ public class Terminal {
 
     private void moveCranesOutTheWay(Point collisionPoint, List<Crane> collidingCranes){
         for (Crane crane: collidingCranes) {
+
+            // If it's closer to the min then the max move to the right
             Point pointToMoveTo = new Point(collisionPoint.getX() + 2 , crane.getPosition().getY());
-            if(crane.getId() == 0){
-                pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
-            }
-            // TODO Check if it's closer to the max then the min
-            // If its closer to the min then the max move to the right
-            // If its closer to the max then move to the left
-            if(crane.getId() == 0){ // kraan is links van het punt
+
+            // If it's closer to the max then move to the left
+            if(crane.getxMax() - collisionPoint.getX() < collisionPoint.getX() - crane.getxMin()){
                 pointToMoveTo = new Point(collisionPoint.getX() - 2 , crane.getPosition().getY());
             }
 
@@ -302,7 +300,7 @@ public class Terminal {
                 earliestMovingTime = Collections.max(crane.getTrajectory().keySet());
             }
 
-            moveCrane(crane,pointToMoveTo,earliestMovingTime);
+            moveCrane(crane,pointToMoveTo,earliestMovingTime, null);
         }
     }
 
@@ -342,12 +340,6 @@ public class Terminal {
         for (Crane crane : cranes) {
             //Check for overlap between movingcrane.position-->destination & other crane-->his destination
             if (crane.getId() != movingCrane.getId()) {
-//                TreeMap<Double, Point> overlaps = getOverlappingTrajectoryTimes(startTime, endTime, crane);
-//                if(!overlaps.isEmpty()){
-//                    if(isTravellingColliding(destination, movingCrane, crane, overlaps, startTime, endTime, delta)){
-//                        collidingCranes.add(crane);
-//                    }
-//                }
                 if(movingCrane.getPosition().getX() < destination.getX()){ // move right
                     if (movingCrane.getPosition().getX() < crane.getPosition().getX() && crane.getPosition().getX() - delta < destination.getX()) // Check if crane comes to close to the other cranes
                         collidingCranes.add(crane);
@@ -359,45 +351,7 @@ public class Terminal {
         }
         return collidingCranes;
     }
-/*
-    public boolean isTravellingColliding(Point destinationMovingCrane,
-                                      Crane movingCrane,
-                                      Crane collisionCrane,
-                                      TreeMap<Double, Point> overlappingTrajectory,
-                                      double startTimeMoving,
-                                      double endTimeMoving,
-                                      int delta){
-        Point startMovingCrane = movingCrane.getPosition();
-        for(Double startTime : overlappingTrajectory.keySet()){
-            Point start = overlappingTrajectory.get(startTime);
-            Double endTime = overlappingTrajectory.higherKey(startTime);
-            Point movingCraneStart = new Point(startMovingCrane.getX(), startMovingCrane.getY());
-            Point movingCraneDest = new Point(destinationMovingCrane.getX(), destinationMovingCrane.getY());
-            Point end = overlappingTrajectory.get(endTime);
-            // Possibility 1: start & end of overlap are between interval --> boundaries interval change
-            if(startTime > startTimeMoving && endTime < endTimeMoving){
-                movingCraneStart.setX(movingCrane.getSpeedX() * (startTime - startTimeMoving) + startMovingCrane.getX());
-                movingCraneDest.setX(destinationMovingCrane.getX() - movingCrane.getSpeedX() * (endTimeMoving - endTime));
-            } // Possibility 2: start & end of overlap are at beginning of interval --> begin time overlap change
-            else if (startTime < startTimeMoving && endTime < endTimeMoving){
-                start.setX(collisionCrane.getSpeedX() * (startTimeMoving - startTime) + start.getX());
-                movingCraneDest.setX(destinationMovingCrane.getX() - collisionCrane.getSpeedX() * (endTimeMoving - endTime));
-            }// Possibility 3: start & end of overlap are at the end of interval --> end time overlap change
-            else if (startTime > startTimeMoving && endTime > endTimeMoving){
-                movingCraneStart.setX(movingCrane.getSpeedX() * (startTime - startTimeMoving) + startMovingCrane.getX());
-                end.setX(end.getX() - collisionCrane.getSpeedX() * (endTime - endTimeMoving));
-            }// Possibility 4: start & end of overlap contain the interval --> boundaries overlap change
-            else if (startTime < startTimeMoving && endTime > endTimeMoving){
-                start.setX(collisionCrane.getSpeedX() * (startTimeMoving - startTime) + start.getX());
-                end.setX(end.getX() - collisionCrane.getSpeedX() * (endTime - endTimeMoving));
-            }
-            if(coordinateIntervalsOverlap(start, end, movingCraneStart, movingCraneDest, delta)){
-                return true;
-            }
-        }
-        return false;
-    }
-*/
+
     private boolean coordinateIntervalsOverlap(Point begin1, Point end1, Point begin2, Point end2, int delta){
         return begin1.getX() + delta < end2.getX() && begin2.getX() + delta < end1.getX();
     }

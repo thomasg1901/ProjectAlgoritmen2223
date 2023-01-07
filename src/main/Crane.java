@@ -7,7 +7,6 @@ public class Crane {
     private int id;
     private Point position;
     private TreeMap<Double, Point> trajectory;
-
     private ArrayList<Movement> assignedMovements;
     private double speedX;
     private double speedY;

@@ -31,6 +31,10 @@ public class Point {
         return Math.abs(this.getX() - p2.getX()) + Math.abs(this.getY() - p2.getY());
     }
 
+    private void iets(){}
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

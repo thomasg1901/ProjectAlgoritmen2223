@@ -63,8 +63,8 @@ public class Target {
         List<Movement> movements = new ArrayList<>();
         Assignment[] initialAssignments = initialTerminal.getAssignments();
         Assignment[] finalAssignments = targetAssignments;
-
-        for (Assignment assignment: finalAssignments) {
+        for (int j = finalAssignments.length-1; j >= 0; j--) {
+            Assignment assignment = finalAssignments[j];
             if(Arrays.stream(initialAssignments).noneMatch(assignment::equals)){
                 Assignment initialAssignment = Arrays.stream(initialAssignments).filter(assignment1 -> assignment1.getContainer().getId() == assignment.getContainer().getId()).findFirst().get();
                 Slot[] toSlots = new Slot[assignment.getContainer().getLength()];
@@ -74,6 +74,9 @@ public class Target {
                 }
                 movements.add(new Movement(initialAssignment.getContainerSlots(),toSlots, assignment.getContainer(), initialTerminal));
             }
+        }
+        for (Assignment assignment: finalAssignments) {
+
         }
 
         return movements;
